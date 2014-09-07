@@ -1,0 +1,36 @@
+.{%= viewName %} {
+  margin: 0.5em;
+}
+
+/* box surrounding the buttons */
+.{%= viewName %}-button-container {
+  display: inline-block;
+  padding: 1em;
+  box-shadow: 0 0 3px rgba(100,0,0,0.15) inset, 0 0 6px rgba(0,0,0,0.5) inset;
+}
+
+/* buttons */
+.{%= viewName %}-button {
+  border: none;
+  padding: 1em;
+  margin: 0.5em;
+  box-shadow: 0 0 3px rgba(0,0,0,0.25);
+  background-color: #eee;
+  outline: none;
+}
+
+/* button with mouse hovering over it */
+.{%= viewName %}-button:hover {
+  background-color: #fdd;
+}
+
+/* button being clicked */
+.{%= viewName %}-button:active {
+  box-shadow: 0 0 5px rgba(0,0,0,0.4);
+}
+
+/* button that is currently selected */
+.{%= viewName %}-button.active {
+  background-color: #fdd;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.15) inset, 0 0 5px rgba(0,0,40,0.3) inset;
+}

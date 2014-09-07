@@ -1,0 +1,62 @@
+Tridium Open Source License
+===========================
+
+Copyright (c) 2014, Tridium, Inc.
+
+All rights reserved.
+
+1. Definitions. 
+
+  "You" shall mean any person or entity who uses, modifies and/or distributes
+  the Work in any manner and thus is bound by this License.
+  
+  "Work" shall mean the work of authorship, whether in Source or Object form,
+  made available under this License.
+  
+  "Derivative Works" shall mean any modification of the Work, whether in source
+  or object form.
+  
+  "Licensor" shall mean Tridium, Inc.
+
+2. Licensor hereby grants to You a license to use the Work and/or redistribute
+   the Work, in source and/or binary forms, without modification, provided that
+   all of the following conditions are met: 
+
+   a) Redistributions of the Work by You of source code must retain the above
+      copyright notice, the list of conditions in this License and the
+      disclaimer set forth in Section 3 below;
+   b) Redistributions of the Work by You in binary form must reproduce the
+      above copyright notice, the list of conditions in this License and the
+      disclaimer set forth in Section 3 below in all documentation and materials
+      provided with the distribution; and
+   c) You may not charge third parties to redistribute the Work.
+  
+3. THIS SOFTWARE IS PROVIDED BY LICENSOR, THE COPYRIGHT HOLDERS AND
+   CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
+   NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+   PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+   EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+   PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+   OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+   OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+   ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+4. Licensor hereby grants to You a license to use a Derivative Work and
+   distribute a Derivative Work, in source and/or binary forms, provided that
+   all of the following conditions are met:
+   
+   a) You must clearly mark the Derivative Work as having been modified by You;
+   b) You must distribute the Derivative Work under the terms of this License
+      including the disclaimer set forth in Section 3 above; and
+   c) The names of the Licensor, copyright holder or contributors of the Work
+      may not be used in any manner to endorse or promote a Derivative Work. 
+
+5. This License shall terminate automatically and You may no longer exercise
+   any of the rights granted to You by this License as of the date You (or any
+   person or company affiliated with You) commence an action, including a
+   cross-claim or counterclaim, against Licensor, any affiliated company of
+   Licensor or any licensee of the Work alleging that the Work infringes a
+   patent.
+

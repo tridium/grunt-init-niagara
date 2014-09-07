@@ -1,0 +1,19 @@
+{
+  "name": "grunt-init-niagara",
+  "description": "Set up scaffolding for a brand new Niagara web module",
+  "version": "0.1.0",
+  "author": {
+    "name": "Logan Byam",
+    "email": "lbyam@tridium.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tridium/grunt-init-niagara.git"
+  },
+  "bugs": {
+    "email": "lbyam@tridium.com"
+  },
+  "keywords": [
+    "grunt", "grunt-init", "gruntplugin"
+  ]
+}

@@ -1,0 +1,15 @@
+{{!this is the template for {%= viewName %}.}}
+{{!it expects an array of strings and assembles them into buttons.}}
+
+<div class="{%= viewName %}">
+  <div class="{%= viewName %}-header">
+    <p>
+      {{ titleText }}
+    </p>
+    <p>
+      <span class="{%= viewName %}-selected-slot-text">{{ selectedSlotText }}</span>
+      <span class="{%= viewName %}-selected-slot"></span>
+    </p>
+  </div>
+  <div class="{%= viewName %}-content"></div>
+</div>

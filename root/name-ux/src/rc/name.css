@@ -1,0 +1,18 @@
+body {
+  background-color: #eeeeff;
+}
+
+p {
+  font-family: 'footerFont';
+}
+
+h1, h2, h3 {
+  font-family: 'headerLink'
+}
+
+.virtues {
+  background-color: #ffffff;
+  padding: 5px 15px;
+  border: 3px dotted black;
+  border-radius: 10px;
+}

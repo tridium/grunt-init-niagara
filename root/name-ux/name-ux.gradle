@@ -1,0 +1,117 @@
+/*
+ * Copyright (c) {%= year %} Tridium, Inc. All Rights Reserved.
+ */
+
+description = "{%= description %}"
+
+niagaraModule {
+  preferredSymbol = "{%= preferredSymbol %}"
+  moduleName = "{%= name %}"
+  runtimeProfile = "ux"
+}
+
+dependencies {
+  compile project(':js-ux')
+
+  {% if (bajaux && fullClassName) { %}
+  compile project(':nre')
+  compile project(':baja')
+  compile project(':hx-wb')
+  compile project(':bajaux-ux')
+  {% } %}
+}
+
+jar {
+  from('src') {
+    include 'jsdoc/'
+    include 'rc/'
+  }
+}
+
+moduleTestJar {
+  from('srcTest') {
+    include 'rc/'
+  }
+}
+
+apply plugin: 'niagara-rjs'
+
+niagaraRjs {
+  builds = [
+    '{%= name %}': [
+      rootDir: 'src/rc',
+      include: [
+        'nmodule/{%= name %}/rc/{%= name %}'{% if (bajaux) { %},
+        'nmodule/{%= name %}/rc/{%= viewName %}'{% } %}
+      ]
+    ]
+  ]
+
+  jsdocBuilds = [
+    '{%= name %}': [
+      source: project.fileTree('.') {
+        include "src/rc/**/*.js"
+        include "README.md"
+        exclude "src/rc/**/*.built.js"
+        exclude "src/rc/**/*.min.js"
+      },
+      destinationDir: 'src/jsdoc',
+      options: [ '--tutorials', file('tutorials').toPath() ]
+    ]
+  ]
+
+  options = [
+    //BajaScript and lexicons cannot legitimately start without running a
+    //station, so disable these plugins outright. Note that this not a standard
+    //r.js option - it's only used by the niagara-rjs plugin.
+    disablePlugins: [ 'baja', 'lex', 'css' ],
+
+    //If you're sharing this code with other modules that use Handlebars,
+    //it's likely these libraries will already be in the browser cache, so
+    //it makes sense to exclude them from the build. If you're certain this
+    //will be a standalone app, it's okay to include these libraries in the
+    //final build to save a few HTTP calls on first load.
+    exclude: [ 'Handlebars', 'underscore', 'hbs' ],
+
+    //I18N in the require-handlebars-plugin is not currently supported for
+    //Niagara and must be manually disabled.
+    //Auto-registration of helpers expects them to be in the /template/helpers
+    //directory. It's best to disable this and explicitly register your
+    //helpers with Handlebars.registerHelper().
+    hbs: [
+      disableHelpers: true,
+      disableI18n: true
+    ],
+
+    //Set up paths the build needs to know about.
+    paths: [
+      //Point {%= name %} module at src directory, using the nmodule convention
+      'nmodule/{%= name %}': 'src',
+
+      //exclude jquery/bajaux altogether
+      'jquery': 'empty:',
+      'bajaux': 'empty:',
+
+      //make Handlebars and associated libraries available to run during the
+      //build process, as templates will be precompiled.
+      //Note that if you need to pull module resources from other modules,
+      //they must be included in the Gradle file as compile-time dependencies.
+      'Handlebars': moduleResource('js-ux', 'rc/handlebars/handlebars-1.0.0'),
+      'hbs': moduleResource('js-ux', 'rc/require-handlebars-plugin/hbs'),
+      'i18nprecompile': moduleResource('js-ux', 'rc/require-handlebars-plugin/hbs/i18nprecompile'),
+      'json2': moduleResource('js-ux', 'rc/require-handlebars-plugin/hbs/json2'),
+      'underscore': moduleResource('js-ux', 'rc/underscore/underscore')
+    ],
+
+    //Handlebars and underscore require shims to work.
+    shim: [
+      'Handlebars': [ exports: 'Handlebars' ],
+      'underscore': [ exports: '_' ]
+    ]
+
+    // RequireJS optimization with Rhino can occasionally cause a stack
+    // overflow if a module is particularly complex and the default JVM stack
+    // size is set too low. Uncomment to bump up the stack size if needed.
+    //,rhinoJvmArgs: [ '-Xss4m' ]
+  ]
+}

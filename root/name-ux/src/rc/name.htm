@@ -1,0 +1,79 @@
+<!-- @noSnoop -->
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="/module/{%= name %}/rc/{%= name %}.css" type="text/css"/>
+  <link rel="stylesheet" href="/module/web/rc/font/font.css" type="text/css"/>
+
+  <script type="text/javascript">
+    var require = {
+      paths: {
+        //pointing nmodule at /module is a Niagara convention, allowing us to
+        //refer to module resources without having RequireJS get hung up on
+        //the use of absolute paths everywhere.
+        "nmodule": "/module",
+        "baja": "/module/bajaScript/rc/plugin/baja",
+        "bajaScript": "/module/bajaScript/rc",
+        "bajaux": "/module/bajaux/rc",
+        "lex": "/module/js/rc/lex/lexplugin",
+        "css": "/module/js/com/tridium/js/ext/require/css",
+
+        "jquery": "/module/js/rc/jquery/jquery-1.8.2",
+        "Handlebars": "/module/js/rc/handlebars/handlebars-1.0.0",
+
+        // these are runtime dependencies for require-handlebars-plugin
+        "hbs": "/module/js/rc/require-handlebars-plugin/hbs",
+        "i18nprecompile": "/module/js/rc/require-handlebars-plugin/hbs/i18nprecompile",
+        "json2": "/module/js/rc/require-handlebars-plugin/hbs/json2",
+        "underscore": "/module/js/rc/underscore/underscore"
+      },
+
+      hbs: {
+        disableI18n: true
+      },
+
+      // Handlebars and underscore can only be loaded via shim
+      shim: {
+        "Handlebars": { exports: "Handlebars" },
+        "underscore": { exports: "_" }
+      }
+    }
+  </script>
+  <script type="text/javascript"
+          data-main="/module/{%= name %}/rc/{%= name %}.run.js"
+          src="/module/js/com/tridium/js/ext/require/require.min.js"></script>
+</head>
+<body>
+  <h1>{%= name %}</h1>
+  <p>
+    A {%= superlative() %} Niagara web app brought to you by {%= author_name %}.
+  </p>
+  <div id="template">Just a sec...</div>
+
+  {% if (bajaux) { %}
+    <p>
+      Here's a small demonstration of how a <code>bajaux</code> view works.
+    </p>
+    <p>
+      The view will be instantiated in the <code>#view</code> div below by
+      calling the <code>instantiate()</code> method, then have a value loaded
+      with <code>load()</code>.
+    </p>
+    <p>
+      Every time a button is clicked, the button's value will be
+      <code>load()</code>ed into the view, which triggers a
+      <code>load.bajaux</code> event. We use jQuery to listen for this event.
+      Each time the event is triggered, the latest value is <code>read()</code>
+      from the view and used to update the <code>#description</code> element.
+    </p>
+    <p>
+      Just give it a try, and take a look at the <a href="{%= viewName %}.js">
+      View source</a> and the <a href="{%= name %}.run.js">page source</a> to
+      see how it works!
+    </p>
+
+    <h2>{%= name %} is... <span id="description"></span>!</h2>
+    <div id="view">Just a sec...</div>
+  {% } %}
+</body>
+</html>

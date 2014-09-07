@@ -1,0 +1,7 @@
+<types>
+  <type name="{%= viewName %}" class="{%= fullClassName %}">{% if (agentType) { %}
+    <agent>
+      <on type="{%= agentType %}" />
+    </agent>
+  {% } %}</type>
+</types>
