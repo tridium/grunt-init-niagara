@@ -96,17 +96,11 @@ niagaraRjs {
       //build process, as templates will be precompiled.
       //Note that if you need to pull module resources from other modules,
       //they must be included in the Gradle file as compile-time dependencies.
-      'Handlebars': moduleResource('js-ux', 'rc/handlebars/handlebars-1.0.0'),
+      'Handlebars': moduleResource('js-ux', 'rc/handlebars/handlebars-v2.0.0'),
       'hbs': moduleResource('js-ux', 'rc/require-handlebars-plugin/hbs'),
       'i18nprecompile': moduleResource('js-ux', 'rc/require-handlebars-plugin/hbs/i18nprecompile'),
       'json2': moduleResource('js-ux', 'rc/require-handlebars-plugin/hbs/json2'),
       'underscore': moduleResource('js-ux', 'rc/underscore/underscore')
-    ],
-
-    //Handlebars and underscore require shims to work.
-    shim: [
-      'Handlebars': [ exports: 'Handlebars' ],
-      'underscore': [ exports: '_' ]
     ]
 
     // RequireJS optimization with Rhino can occasionally cause a stack
