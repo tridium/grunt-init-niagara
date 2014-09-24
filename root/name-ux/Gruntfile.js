@@ -30,8 +30,7 @@ module.exports = function runGrunt(grunt) {
       station: {
         stationName: '{%= name %}',
         forceCopy: true,
-        sourceStationFolder: './srcTest/rc/stations/{%= name %}UnitTest',
-        error: function squelch() {}
+        sourceStationFolder: './srcTest/rc/stations/{%= name %}UnitTest'
       }
     }
   });
