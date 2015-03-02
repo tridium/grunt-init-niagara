@@ -39,13 +39,12 @@ define(['bajaux/Widget',
   var {%= viewName %} = function {%= viewName %}() {
     /** remember to call super constructor. Javascript won't do this for you */
     Widget.apply(this, arguments);
+    subscriberMixin(this);
   };
 
   //extend and set up prototype chain
   {%= viewName %}.prototype = Object.create(Widget.prototype);
   {%= viewName %}.prototype.constructor = {%= viewName %};
-
-  {%= viewName %} = subscriberMixin({%= viewName %});
 
   /**
    * Do initial setup of the DOM for the view. This will set up the DOM's
