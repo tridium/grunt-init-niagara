@@ -18,6 +18,7 @@ dependencies {
   compile project(':baja')
   compile project(':hx-wb')
   compile project(':bajaux-ux')
+  compile project(':web-rt')
   {% } %}
 }
 
