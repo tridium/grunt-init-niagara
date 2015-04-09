@@ -260,7 +260,7 @@ exports.template = function (grunt, init, done) {
     props.year = new Date().getFullYear();
     props.devDependencies = {
       "grunt": "~0.4.1",
-      "grunt-niagara": "^0.1.19"
+      "grunt-niagara": "^0.1.20"
     };
 
     props.fullClassName = props.fullClassName || '';
