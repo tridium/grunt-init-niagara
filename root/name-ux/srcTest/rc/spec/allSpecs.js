@@ -1,5 +1,5 @@
 {% if (bajaux) { %}
-define(['nmodule/{%= name %}Test/rc/spec/{%= viewName %}Spec'], function () {
+define(['nmodule/{%= name %}Test/rc/spec/{%= widgetName %}Spec'], function () {
   'use strict';
 });
 {% } else { %}

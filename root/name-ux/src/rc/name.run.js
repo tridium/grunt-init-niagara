@@ -7,14 +7,16 @@
 
 %}
 require(['baja!',
+         'bajaux/events',
          'nmodule/{%= name %}/rc/{%= name %}',
          'jquery',
-         'nmodule/{%= name %}/rc/{%= viewName %}',
+         'nmodule/{%= name %}/rc/{%= widgetName %}',
          'hbs!nmodule/{%= name %}/rc/template/{%= name %}'], function (
          baja,
+         events,
          {%= name %},
          $,
-         {%= viewName %},
+         {%= widgetName %},
          template) {
 
   'use strict';
@@ -23,7 +25,7 @@ require(['baja!',
     virtues: {%= name %}.extolVirtues()
   }));
 
-  var view = new {%= viewName %}(),
+  var widget = new {%= widgetName %}(),
       comp = baja.$('baja:Component', {
         '{%= superlative() %}': true,
         '{%= superlative() %}': true,
@@ -32,20 +34,20 @@ require(['baja!',
         '{%= superlative() %}': true
       });
 
-  var viewDiv = $('#view'),
+  var widgetDiv = $('#widget'),
       description = $('#description');
 
-  view.initialize(viewDiv)
+  widget.initialize(widgetDiv)
     .then(function () {
 
-      viewDiv.on('click', function () {
-        view.read()
+      widgetDiv.on(events.MODIFY_EVENT, function () {
+        widget.read()
           .then(function (value) {
             description.text(value);
           });
       });
 
-      return view.load(comp);
+      return widget.load(comp);
     });
 });
 {%
@@ -58,14 +60,14 @@ require(['baja!',
 
 
 %}
-require(['nmodule/{%= name %}/rc/{%= viewName %}'], function ({%= viewName %}) {
+require(['nmodule/{%= name %}/rc/{%= widgetName %}'], function ({%= widgetName %}) {
   'use strict';
 });
 {% 
 
 
 ////////////////////////////////////////////////////////////////
-// No bajaux view
+// No bajaux widget
 ////////////////////////////////////////////////////////////////
 } else { 
 

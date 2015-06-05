@@ -43,7 +43,7 @@ niagaraRjs {
       rootDir: 'src/rc',
       include: [
         'nmodule/{%= name %}/rc/{%= name %}'{% if (bajaux) { %},
-        'nmodule/{%= name %}/rc/{%= viewName %}'{% } %}
+        'nmodule/{%= name %}/rc/{%= widgetName %}'{% } %}
       ]
     ]
   ]

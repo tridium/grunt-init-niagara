@@ -23,5 +23,5 @@ public final class {%= className %}
   public JsInfo getJsInfo(Context cx) { return jsInfo; }
 
   private static final JsInfo jsInfo =
-      JsInfo.make(BOrd.make("module://{%= name %}/rc/{%= viewName %}.js"));
+      JsInfo.make(BOrd.make("module://{%= name %}/rc/{%= widgetName %}.js"));
 }

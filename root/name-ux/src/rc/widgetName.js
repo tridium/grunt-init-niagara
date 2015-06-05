@@ -7,26 +7,26 @@
 
 %}
 /**
- * A module defining `{%= viewName %}`.
+ * A module defining `{%= widgetName %}`.
  *
- * @module nmodule/{%= name %}/rc/{%= viewName %}
+ * @module nmodule/{%= name %}/rc/{%= widgetName %}
  */
 define(['bajaux/Widget',
         'bajaux/mixin/subscriberMixIn',
         'jquery',
-        'hbs!nmodule/{%= name %}/rc/template/{%= viewName %}-structure',
-        'hbs!nmodule/{%= name %}/rc/template/{%= viewName %}-content',
-        'css!nmodule/{%= name %}/rc/{%= viewName %}'], function (
+        'hbs!nmodule/{%= name %}/rc/template/{%= widgetName %}-structure',
+        'hbs!nmodule/{%= name %}/rc/template/{%= widgetName %}-content',
+        'css!nmodule/{%= name %}/rc/{%= widgetName %}'], function (
         Widget,
         subscriberMixin,
         $,
-        tpl{%= viewName %}Structure,
-        tpl{%= viewName %}Content) {
+        tpl{%= widgetName %}Structure,
+        tpl{%= widgetName %}Content) {
 
   'use strict';
 
   var SELECTED_CLASS = 'active',
-      BUTTON_CLASS = '{%= viewName %}-button';
+      BUTTON_CLASS = '{%= widgetName %}-button';
 
   /**
    * A demonstration Widget. This builds a list of buttons from the slots of a
@@ -34,37 +34,38 @@ define(['bajaux/Widget',
    *
    * @class
    * @extends module:bajaux/Widget
-   * @alias module:nmodule/{%= name %}/rc/{%= viewName %}
+   * @alias module:nmodule/{%= name %}/rc/{%= widgetName %}
    */
-  var {%= viewName %} = function {%= viewName %}() {
+  var {%= widgetName %} = function {%= widgetName %}() {
     /** remember to call super constructor. Javascript won't do this for you */
     Widget.apply(this, arguments);
     subscriberMixin(this);
   };
 
   //extend and set up prototype chain
-  {%= viewName %}.prototype = Object.create(Widget.prototype);
-  {%= viewName %}.prototype.constructor = {%= viewName %};
+  {%= widgetName %}.prototype = Object.create(Widget.prototype);
+  {%= widgetName %}.prototype.constructor = {%= widgetName %};
 
   /**
-   * Do initial setup of the DOM for the view. This will set up the DOM's
+   * Do initial setup of the DOM for the widget. This will set up the DOM's
    * structure and create a space where the buttons will go.
    *
-   * @param {jQuery} element the DOM element into which to load this View
+   * @param {jQuery} element the DOM element into which to load this widget
    */
-  {%= viewName %}.prototype.doInitialize = function (dom) {
+  {%= widgetName %}.prototype.doInitialize = function (dom) {
     var that = this;
 
-    dom.html(tpl{%= viewName %}Structure({
+    dom.html(tpl{%= widgetName %}Structure({
       titleText: "These are the slots on your component.",
       selectedSlotText: "You've selected slot: "
     }));
 
-    dom.delegate('.{%= viewName %}-content button', 'click', function () {
+    dom.on('click', '.{%= widgetName %}-content button', function () {
       var $this = $(this);
       $this.siblings().removeClass(SELECTED_CLASS);
       $this.addClass(SELECTED_CLASS);
       that.$updateSlotText();
+      that.setModified(true);
     });
   };
 
@@ -74,25 +75,25 @@ define(['bajaux/Widget',
    *
    * @private
    */
-  {%= viewName %}.prototype.$updateSlotText = function () {
+  {%= widgetName %}.prototype.$updateSlotText = function () {
     var that = this,
         dom = that.jq();
 
     that.read().done(function (slotName) {
-      dom.find('.{%= viewName %}-selected-slot').text(slotName);
+      dom.find('.{%= widgetName %}-selected-slot').text(slotName);
     });
   };
 
   /**
-   * Builds the actual buttons and loads them into the View.
+   * Builds the actual buttons and loads them into the widget.
    *
    * @private
    * @param {baja.Complex} value the value being loaded in
    */
-  {%= viewName %}.prototype.$buildButtons = function (value) {
+  {%= widgetName %}.prototype.$buildButtons = function (value) {
     var that = this,
         dom = that.jq(),
-        contentDom = dom.find('.{%= viewName %}-content'),
+        contentDom = dom.find('.{%= widgetName %}-content'),
         buttons = [];
 
     value.getSlots().each(function (slot) {
@@ -102,7 +103,7 @@ define(['bajaux/Widget',
       });
     });
 
-    contentDom.html(tpl{%= viewName %}Content({
+    contentDom.html(tpl{%= widgetName %}Content({
       buttons: buttons
     }));
 
@@ -116,7 +117,7 @@ define(['bajaux/Widget',
    * @param {baja.Complex} value the complex value whose slots you wish to
    * select from
    */
-  {%= viewName %}.prototype.doLoad = function (value) {
+  {%= widgetName %}.prototype.doLoad = function (value) {
     var that = this;
 
     that.$buildButtons(value);
@@ -132,15 +133,15 @@ define(['bajaux/Widget',
    * @returns {jQuery.Promise} to be resolved with the name of the currently
    * selected slot
    */
-  {%= viewName %}.prototype.doRead = function () {
+  {%= widgetName %}.prototype.doRead = function () {
     var df = $.Deferred(),
         selectedButton = this.jq().find(
-          '.{%= viewName %}-content .' + BUTTON_CLASS + '.' + SELECTED_CLASS);
+          '.{%= widgetName %}-content .' + BUTTON_CLASS + '.' + SELECTED_CLASS);
 
     return df.resolve(selectedButton.data('slot')).promise();
   };
 
-  return {%= viewName %};
+  return {%= widgetName %};
 });
 {%
 
@@ -154,9 +155,9 @@ define(['bajaux/Widget',
 
 %}
 /**
- * A module defining `{%= viewName %}`.
+ * A module defining `{%= widgetName %}`.
  *
- * @module nmodule/{%= name %}/rc/{%= viewName %}
+ * @module nmodule/{%= name %}/rc/{%= widgetName %}
  */
 define(['bajaux/Widget', 'jquery'], function (Widget, $) {
 
@@ -167,44 +168,44 @@ define(['bajaux/Widget', 'jquery'], function (Widget, $) {
    *
    * @class
    * @extends module:bajaux/Widget
-   * @alias module:nmodule/{%= name %}/rc/{%= viewName %}
+   * @alias module:nmodule/{%= name %}/rc/{%= widgetName %}
    */
-  var {%= viewName %} = function {%= viewName %}() {
+  var {%= widgetName %} = function {%= widgetName %}() {
     Widget.apply(this, arguments);
   };
 
   //extend and set up prototype chain
-  {%= viewName %}.prototype = Object.create(Widget.prototype);
-  {%= viewName %}.prototype.constructor = {%= viewName %};
+  {%= widgetName %}.prototype = Object.create(Widget.prototype);
+  {%= widgetName %}.prototype.constructor = {%= widgetName %};
 
   /**
-   * Describe how your view does its initial setup of the DOM.
+   * Describe how your widget does its initial setup of the DOM.
    *
-   * @param {jQuery} element the DOM element into which to load this View
+   * @param {jQuery} element the DOM element into which to load this widget
    */
-  {%= viewName %}.prototype.doInitialize = function (dom) {
+  {%= widgetName %}.prototype.doInitialize = function (dom) {
     dom.html('<input type="text" value="value goes here" />');
   };
 
   /**
-   * Describe how your view loads in a value.
+   * Describe how your widget loads in a value.
    *
-   * @param value description of the value to be loaded into this view
+   * @param value description of the value to be loaded into this widget
    */
-  {%= viewName %}.prototype.doLoad = function (value) {
+  {%= widgetName %}.prototype.doLoad = function (value) {
     this.jq().find('input').val(String(value));
   };
 
   /**
-   * Describe what kind of data you can read out of this view.
+   * Describe what kind of data you can read out of this widget.
    *
    * @returns {jQuery.Promise} to be resolved with the current value
    */
-  {%= viewName %}.prototype.doRead = function () {
+  {%= widgetName %}.prototype.doRead = function () {
     var val = this.jq().find('input').val();
     return $.Deferred().resolve(val).promise();
   };
 
-  return {%= viewName %};
+  return {%= widgetName %};
 });
 {% } %}

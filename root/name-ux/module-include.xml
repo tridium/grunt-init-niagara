@@ -1,5 +1,5 @@
 <types>
-  <type name="{%= viewName %}" class="{%= fullClassName %}">{% if (agentType) { %}
+  <type name="{%= widgetName %}" class="{%= fullClassName %}">{% if (agentType) { %}
     <agent>
       <on type="{%= agentType %}" />
     </agent>

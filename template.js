@@ -106,11 +106,11 @@ exports.template = function (grunt, init, done) {
 // Definitions of prompts
 ////////////////////////////////////////////////////////////////
 
-  var viewNamePrompt = {
-    message: 'bajaux View name',
-    name: 'viewName',
+  var widgetNamePrompt = {
+    message: 'bajaux Widget name',
+    name: 'widgetName',
     default: function (value, data, done) {
-      done(null, capitalizeFirstLetter(niagaraModuleName) + 'View');
+      done(null, capitalizeFirstLetter(niagaraModuleName) + 'Widget');
     },
     validator: function (value, done) {
       done(isValidNiagaraModuleName(value));
@@ -119,13 +119,13 @@ exports.template = function (grunt, init, done) {
   };
 
   var classNamePrompt = {
-    message: 'Fully qualified class name for your View',
+    message: 'Fully qualified class name for your Widget',
     name: 'fullClassName',
     default: function (value, data, done) {
       var author = data['author_name'].replace(/[^A-Za-z0-9]/g, '')
         .toLowerCase();
       done(null, 'com.' + author + '.' + niagaraModuleName.toLowerCase() +
-        '.B' + data.viewName);
+        '.B' + data.widgetName);
     },
     validator: function (value, done) {
       done(value.split('.').pop().charAt(0) === 'B')
@@ -138,7 +138,7 @@ exports.template = function (grunt, init, done) {
    * Java class. This will add another prompt for the class name to use.
    */
   var registerAgentPrompt = {
-    message: 'Register your View as an agent on a Type? (Leave blank for none)',
+    message: 'Register your Widget as an agent on a Type? (Leave blank for none)',
     name: 'agentType',
     validator: function (value, done) {
       if (value === '') {
@@ -191,26 +191,26 @@ exports.template = function (grunt, init, done) {
     message: 'Only generate skeleton files?',
     name: 'skeleton',
     default: 'y/N',
-    warning: 'y: Your view files will be the bare ' +
-      'minimum structure of a bajaux view. N: Your view files will contain ' +
+    warning: 'y: Your widget files will be the bare ' +
+      'minimum structure of a bajaux widget. N: Your widget files will contain ' +
       'demo logic to examine and modify. If this is your first time using ' +
       'grunt-init-niagara or bajaux, choose N.'
   };
 
   /**
-   * If you create a bajaux View, adds prompts for the name of the View and
+   * If you create a bajaux Widget, adds prompts for the name of the Widget and
    * whether you want to register it as an agent.
    */
   var bajauxPrompt = {
-    message: 'Would you like to create a bajaux View?',
+    message: 'Would you like to create a bajaux Widget?',
     name: 'bajaux',
     default: 'y/N',
     validator: function (value, done) {
       //this logic should be in before(), but grunt-init uses an old version of
       //the 'prompt' library
       if (value.toLowerCase() === 'y') {
-        //we're creating a bajaux view. prompt for a couple more bajaux things
-        insertPromptsAfter('bajaux', viewNamePrompt, registerAgentPrompt, 
+        //we're creating a bajaux widget. prompt for a couple more bajaux things
+        insertPromptsAfter('bajaux', widgetNamePrompt, registerAgentPrompt, 
           skeletonPrompt);
       }
       done();
@@ -237,12 +237,12 @@ exports.template = function (grunt, init, done) {
 
   init.process({}, allPrompts, function (err, props) {
 
-    //is the file used for a bajaux view?
-    function isViewFile(file) {
-      return file.indexOf('View') > 0;
+    //is the file used for a bajaux widget?
+    function isWidgetFile(file) {
+      return file.indexOf('Widget') > 0;
     }
 
-    //is the file used for agent registration of a bajaux view?
+    //is the file used for agent registration of a bajaux widget?
     function isAgentFile(file) {
       return file.match('.java') || file.match('module-include.xml');
     }
@@ -272,17 +272,17 @@ exports.template = function (grunt, init, done) {
     props.bajaux = String(props.bajaux).toLowerCase() === 'y';
     props.skeleton = !props.bajaux || String(props.skeleton).toLowerCase() === 'y';
     props.moduleName = niagaraModuleName;
-    props.viewName = props.viewName === undefined ? 'NotAView' : props.viewName;
+    props.widgetName = props.widgetName === undefined ? 'NotAWidget' : props.widgetName;
 
     var files = init.filesToCopy(props);
 
     if (!props.bajaux) {
-      //we're not making a bajaux view, so don't copy any bajaux-specific files.
+      //we're not making a bajaux widget, so don't copy any bajaux-specific files.
       filterOutProps(files, function (file) {
-        return (isViewFile(file) || isAgentFile(file));
+        return (isWidgetFile(file) || isAgentFile(file));
       });
     } else if (!props.agentType) {
-      //we're making a view but not registering it as an agent, so don't copy
+      //we're making a widget but not registering it as an agent, so don't copy
       //Java class files etc.
       filterOutProps(files, isAgentFile);
     }

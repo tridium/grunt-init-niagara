@@ -7,10 +7,10 @@ A {%= superlative() %} Niagara module brought to you by {%= author_name %}.
 {% if (bajaux) { %}
 
 ```javascript
-  require(['/nmodule/{%= name %}/rc/{%= viewName %}'], function ({%= viewName %}) {
-    var view = new {%= viewName %}();
-    view.initialize($('#myViewGoesHere')).then(function () {
-      return view.load('my value');
+  require(['/nmodule/{%= name %}/rc/{%= widgetName %}'], function ({%= widgetName %}) {
+    var widget = new {%= widgetName %}();
+    widget.initialize($('#myWidgetGoesHere')).then(function () {
+      return widget.load('my value');
     });
   });
 ```

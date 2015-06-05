@@ -7,11 +7,11 @@
 
 %}
 define(['baja!',
-        'nmodule/{%= name %}/rc/{%= viewName %}',
+        'nmodule/{%= name %}/rc/{%= widgetName %}',
         'nmodule/js/rc/jasmine/promiseUtils',
         'jquery'], function (
         baja,
-        {%= viewName %},
+        {%= widgetName %},
         promiseUtils,
         $) {
 
@@ -20,9 +20,9 @@ define(['baja!',
   var doPromise = promiseUtils.doPromise,
       addCustomMatchers = promiseUtils.addCustomMatchers;
 
-  describe('{%= viewName %}', function () {
+  describe('{%= widgetName %}', function () {
     var stooges,
-        view,
+        widget,
         elem;
 
     beforeEach(function () {
@@ -49,10 +49,10 @@ define(['baja!',
         stooges = s;
       });
 
-      view = new {%= viewName %}();
+      widget = new {%= widgetName %}();
       elem = $('<div/>');
 
-      doPromise(view.initialize(elem));
+      doPromise(widget.initialize(elem));
 
       //addCustomMatchers gets us the toBeResolvedWith() matcher along with
       //some others. see the JSDoc for js/rc/jasmine/promiseUtils for details.
@@ -61,12 +61,12 @@ define(['baja!',
 
     describe('#doInitialize()', function () {
       it('creates the structure to load buttons into', function () {
-        expect(elem.find('.{%= viewName %}-header').length).toBe(1);
-        expect(elem.find('.{%= viewName %}-content').length).toBe(1);
+        expect(elem.find('.{%= widgetName %}-header').length).toBe(1);
+        expect(elem.find('.{%= widgetName %}-content').length).toBe(1);
       });
 
       it('arms a handler to set active class on button click', function () {
-        var contentDom = elem.find('.{%= viewName %}-content'),
+        var contentDom = elem.find('.{%= widgetName %}-content'),
             button = $('<button></button>');
 
         button.appendTo(contentDom).click();
@@ -74,7 +74,7 @@ define(['baja!',
       });
 
       it("removes active class from other buttons when one is clicked", function () {
-        var contentDom = elem.find('.{%= viewName %}-content'),
+        var contentDom = elem.find('.{%= widgetName %}-content'),
             button1 = $('<button></button>').appendTo(contentDom),
             button2 = $('<button></button>').appendTo(contentDom),
             button3 = $('<button></button>').appendTo(contentDom);
@@ -92,11 +92,11 @@ define(['baja!',
       });
 
       it('arms a handler to display selected slot name', function () {
-        var slotDom = elem.find('.{%= viewName %}-selected-slot');
+        var slotDom = elem.find('.{%= widgetName %}-selected-slot');
 
         runs(function () {
-          var contentDom = elem.find('.{%= viewName %}-content'),
-              button = $('<button class="{%= viewName %}-button" data-slot="curlyJoe"></button>');
+          var contentDom = elem.find('.{%= widgetName %}-content'),
+              button = $('<button class="{%= widgetName %}-button" data-slot="curlyJoe"></button>');
 
           button.appendTo(contentDom);
           button.click();
@@ -114,7 +114,7 @@ define(['baja!',
 
     describe('#doLoad()', function () {
       beforeEach(function () {
-        doPromise(view.load(stooges));
+        doPromise(widget.load(stooges));
       });
 
       it('creates a button for each slot', function () {
@@ -138,16 +138,16 @@ define(['baja!',
 
     describe('#doRead()', function () {
       beforeEach(function () {
-        doPromise(view.load(stooges));
+        doPromise(widget.load(stooges));
       });
 
       it('returns the value of the currently active button', function () {
         elem.find('button:contains(curly)').addClass('active');
-        expect(view.read()).toBeResolvedWith('curly');
+        expect(widget.read()).toBeResolvedWith('curly');
       });
 
       it('returns undefined if no button selected', function () {
-        expect(view.read()).toBeResolvedWith(undefined);
+        expect(widget.read()).toBeResolvedWith(undefined);
       });
     });
   });
@@ -164,10 +164,10 @@ define(['baja!',
 
 
 %}
-define(['nmodule/{%= name %}/rc/{%= viewName %}',
+define(['nmodule/{%= name %}/rc/{%= widgetName %}',
         'nmodule/js/rc/jasmine/promiseUtils',
         'jquery'], function (
-         {%= viewName %},
+         {%= widgetName %},
          promiseUtils,
          $) {
 
@@ -175,49 +175,49 @@ define(['nmodule/{%= name %}/rc/{%= viewName %}',
 
   var doPromise = promiseUtils.doPromise;
 
-  describe('{%= viewName %}', function () {
-    var view,
+  describe('{%= widgetName %}', function () {
+    var widget,
         elem;
 
     beforeEach(function () {
-      view = new {%= viewName %}();
+      widget = new {%= widgetName %}();
       elem = $('<div/>');
     });
 
     describe('#doInitialize()', function () {
       it('does something', function () {
-        doPromise(view.initialize(elem))
+        doPromise(widget.initialize(elem))
           .then(function () {
-            //assert something about the view after initialization.
-            //expect(view.js().text()).toBe('ready to go');
+            //assert something about the widget after initialization.
+            //expect(widget.js().text()).toBe('ready to go');
           });
       });
     });
 
     describe('#doLoad()', function () {
       it('does something', function () {
-        doPromise(view.initialize(elem)
+        doPromise(widget.initialize(elem)
           .then(function () {
-            return view.load('something');
+            return widget.load('something');
           }))
           .then(function () {
-            //assert something about the view after value is loaded.
-            //expect(view.jq().find('input').val()).toBe('something good'):
+            //assert something about the widget after value is loaded.
+            //expect(widget.jq().find('input').val()).toBe('something good'):
           });
       });
     });
 
     describe('#doRead()', function () {
       it('does something', function () {
-        doPromise(view.initialize(elem)
+        doPromise(widget.initialize(elem)
           .then(function () {
-            return view.load('something good');
+            return widget.load('something good');
           })
           .then(function () {
-            return view.read();
+            return widget.read();
           }))
           .then(function (result) {
-            //assert something about the result read from the view.
+            //assert something about the result read from the widget.
             //expect(result).toBe('something {%= superlative() %}');
           });
       });
