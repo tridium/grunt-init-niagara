@@ -20,7 +20,7 @@ define(['baja!',
   var doPromise = promiseUtils.doPromise,
       addCustomMatchers = promiseUtils.addCustomMatchers;
 
-  describe('{%= widgetName %}', function () {
+  describe('nmodule/{%= name %}/rc/{%= widgetName %}', function () {
     var stooges,
         widget,
         elem;
@@ -175,7 +175,7 @@ define(['nmodule/{%= name %}/rc/{%= widgetName %}',
 
   var doPromise = promiseUtils.doPromise;
 
-  describe('{%= widgetName %}', function () {
+  describe('nmodule/{%= name %}/rc/{%= widgetName %}', function () {
     var widget,
         elem;
 
