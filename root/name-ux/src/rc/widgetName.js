@@ -14,12 +14,14 @@
 define(['bajaux/Widget',
         'bajaux/mixin/subscriberMixIn',
         'jquery',
+        'Promise',
         'hbs!nmodule/{%= name %}/rc/template/{%= widgetName %}-structure',
         'hbs!nmodule/{%= name %}/rc/template/{%= widgetName %}-content',
         'css!nmodule/{%= name %}/rc/{%= widgetName %}'], function (
         Widget,
         subscriberMixin,
         $,
+        Promise,
         tpl{%= widgetName %}Structure,
         tpl{%= widgetName %}Content) {
 
@@ -130,15 +132,15 @@ define(['bajaux/Widget',
   /**
    * Gets the currently selected slot
    *
-   * @returns {jQuery.Promise} to be resolved with the name of the currently
+   * @returns {Promise} promise to be resolved with the name of the currently
    * selected slot
    */
   {%= widgetName %}.prototype.doRead = function () {
-    var df = $.Deferred(),
-        selectedButton = this.jq().find(
+    var selectedButton = this.jq().find(
           '.{%= widgetName %}-content .' + BUTTON_CLASS + '.' + SELECTED_CLASS);
 
-    return df.resolve(selectedButton.data('slot')).promise();
+    //promises are optional - the slot could also be returned directly
+    return Promise.resolve(selectedButton.data('slot'));
   };
 
   return {%= widgetName %};
@@ -159,7 +161,7 @@ define(['bajaux/Widget',
  *
  * @module nmodule/{%= name %}/rc/{%= widgetName %}
  */
-define(['bajaux/Widget', 'jquery'], function (Widget, $) {
+define(['bajaux/Widget', 'jquery', 'Promise'], function (Widget, $, Promise) {
 
   'use strict';
 
@@ -199,11 +201,10 @@ define(['bajaux/Widget', 'jquery'], function (Widget, $) {
   /**
    * Describe what kind of data you can read out of this widget.
    *
-   * @returns {jQuery.Promise} to be resolved with the current value
+   * @returns {Promise} promise to be resolved with the current value
    */
   {%= widgetName %}.prototype.doRead = function () {
-    var val = this.jq().find('input').val();
-    return $.Deferred().resolve(val).promise();
+    return Promise.resolve(this.jq().find('input').val());
   };
 
   return {%= widgetName %};
