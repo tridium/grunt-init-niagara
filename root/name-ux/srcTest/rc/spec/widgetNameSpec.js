@@ -7,13 +7,15 @@
 
 %}
 define(['baja!',
+        'jquery',
+        'Promise',
         'nmodule/{%= name %}/rc/{%= widgetName %}',
-        'nmodule/js/rc/jasmine/promiseUtils',
-        'jquery'], function (
+        'nmodule/js/rc/jasmine/promiseUtils'], function (
         baja,
+        $,
+        Promise,
         {%= widgetName %},
-        promiseUtils,
-        $) {
+        promiseUtils) {
 
   'use strict';
 
@@ -24,39 +26,57 @@ define(['baja!',
     var stooges,
         widget,
         elem;
-
-    beforeEach(function () {
-      //First set up a mounted component to work with.
-      var promise = baja.Ord.make('station:|slot:').get({ lease: true })
+        
+    function addStoogesComponent() {
+      return baja.Ord.make('station:|slot:').get({ lease: true })
         .then(function (station) {
-          var method = station.has('stooges') ? 'set' : 'add';
-          return station[method]({
+          return station.add({
             slot: 'stooges',
             value: baja.$('baja:Component', {
-              moe: true,
-              larry: true,
-              curly: true
+              moe: true, larry: true, curly: true
             })
           });
         })
         .then(function () {
           return baja.Ord.make('station:|slot:/stooges').get({ lease: true });
+        })
+        .then(function (s) {
+          stooges = s;
         });
-
-      //doPromise wraps the promise execution in jasmine runs/waitsFor calls
-      //to ensure it completes before continuing with the test.
-      doPromise(promise).then(function (s) {
-        stooges = s;
-      });
-
+    }
+    
+    function removeStoogesComponent() {
+      return baja.Ord.make('station:|slot:').get({ lease: true })
+        .then(function (station) {
+          return station.remove({ slot: 'stooges' });
+        });
+    }
+    
+    function initializeWidget() {
       widget = new {%= widgetName %}();
       elem = $('<div/>');
 
-      doPromise(widget.initialize(elem));
+      return widget.initialize(elem);
+    }
 
+    beforeEach(function () {
+      //for each spec, we want an initialized widget, and a mounted
+      //component to work with.
+      //doPromise wraps the promise execution in jasmine runs/waitsFor calls
+      //to ensure it completes before continuing with the test.
+      doPromise(Promise.join(
+        addStoogesComponent(),
+        initializeWidget()
+      ));
+ 
       //addCustomMatchers gets us the toBeResolvedWith() matcher along with
       //some others. see the JSDoc for js/rc/jasmine/promiseUtils for details.
       addCustomMatchers(this);
+    });
+    
+    afterEach(function () {
+      //after each spec, we clean up after ourselves.
+      doPromise(removeStoogesComponent());
     });
 
     describe('#doInitialize()', function () {
