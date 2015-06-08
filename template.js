@@ -300,7 +300,8 @@ exports.template = function (grunt, init, done) {
 
     // Template-specific notes to be displayed after question prompts.
     exports.after =
-      'You should now install project dependencies with _npm install_. ' +
+      'You should now cd into your new ' + props.name + '-ux directory and ' +
+      'install project dependencies with _npm install_. ' +
       'After that, you may execute project tasks with _grunt_. ' +
       'For more information about installing and configuring Grunt, please ' +
       'see the Getting Started guide:' +
@@ -308,7 +309,7 @@ exports.template = function (grunt, init, done) {
       'http://gruntjs.com/getting-started' +
       '\n\n' +
       'Build the Niagara module with Gradle by typing: ' +
-      '_gradlew :' + props.name + ':build_';
+      '_gradlew :' + props.name + '-ux:build_';
       
     if (props.bajaux && !props.skeleton) {
       exports.after += '\n\n' +
