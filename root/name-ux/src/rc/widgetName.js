@@ -76,13 +76,13 @@ define(['bajaux/Widget',
    * The display will be updated asynchronously.
    *
    * @private
+   * @returns {Promise}
    */
   {%= widgetName %}.prototype.$updateSlotText = function () {
-    var that = this,
-        dom = that.jq();
+    var that = this;
 
-    that.read().done(function (slotName) {
-      dom.find('.{%= widgetName %}-selected-slot').text(slotName);
+    return that.read().then(function (slotName) {
+      that.jq().find('.{%= widgetName %}-selected-slot').text(slotName);
     });
   };
 
