@@ -272,6 +272,7 @@ exports.template = function (grunt, init, done) {
     props.bajaux = String(props.bajaux).toLowerCase() === 'y';
     props.skeleton = !props.bajaux || String(props.skeleton).toLowerCase() === 'y';
     props.moduleName = niagaraModuleName;
+    props.jsBuildName = capitalizeFirstLetter(props.moduleName) + 'JsBuild';
     props.widgetName = props.widgetName === undefined ? 'NotAWidget' : props.widgetName;
 
     var files = init.filesToCopy(props);

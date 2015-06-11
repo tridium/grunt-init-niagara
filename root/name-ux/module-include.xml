@@ -4,4 +4,5 @@
       <on type="{%= agentType %}" />
     </agent>
   {% } %}</type>
+  <type name="{%= jsBuildName %}" class="{%= package %}.B{%= jsBuildName %}" />
 </types>
