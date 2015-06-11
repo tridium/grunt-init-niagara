@@ -89,9 +89,10 @@ niagaraRjs {
       //Point {%= name %} module at src directory, using the nmodule convention
       'nmodule/{%= name %}': 'src',
 
-      //exclude jquery/bajaux altogether
+      //exclude jquery/bajaux/Promise altogether
       'jquery': 'empty:',
       'bajaux': 'empty:',
+      'Promise': 'empty:',
 
       //make Handlebars and associated libraries available to run during the
       //build process, as templates will be precompiled.
