@@ -1,6 +1,8 @@
 /*
- * Copyright (c) {%= year %} Tridium, Inc. All Rights Reserved.
+ * Copyright (c) {%= year %} {%= author_name %}. All Rights Reserved.
  */
+
+apply from: "${System.getenv("niagara_home")}/etc/gradle/niagara.gradle"
 
 description = "{%= description %}"
 
@@ -11,14 +13,14 @@ niagaraModule {
 }
 
 dependencies {
-  compile project(':js-ux')
+  compile 'Tridium:js-ux:4.0.0'
 
   {% if (bajaux && fullClassName) { %}
-  compile project(':nre')
-  compile project(':baja')
-  compile project(':hx-wb')
-  compile project(':bajaux-ux')
-  compile project(':web-rt')
+  compile 'Tridium:nre:4.0.0'
+  compile 'Tridium:baja:4.0.0'
+  compile 'Tridium:hx-wb:4.0.0'
+  compile 'Tridium:bajaux-ux:4.0.0'
+  compile 'Tridium:web-rt:4.0.0'
   {% } %}
 }
 
@@ -34,8 +36,6 @@ moduleTestJar {
     include 'rc/'
   }
 }
-
-apply plugin: 'niagara-rjs'
 
 niagaraRjs {
   builds = [
