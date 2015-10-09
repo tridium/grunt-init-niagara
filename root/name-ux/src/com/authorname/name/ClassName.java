@@ -5,13 +5,13 @@ import javax.baja.sys.BSingleton;
 import javax.baja.sys.Context;
 import javax.baja.sys.Sys;
 import javax.baja.sys.Type;
-import javax.baja.web.BIFormFactorMax;
+import javax.baja.web.{%= widgetInterface %};
 import javax.baja.web.js.BIJavaScript;
 import javax.baja.web.js.JsInfo;
 
 public final class {%= className %}
     extends BSingleton
-    implements BIJavaScript, BIFormFactorMax
+    implements BIJavaScript, {%= widgetInterface %}
 {
   private {%= className %}() {}
   public static final {%= className %} INSTANCE = new {%= className %}();

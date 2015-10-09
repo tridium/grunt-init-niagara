@@ -2,7 +2,7 @@
   "name-ux": "{%= name %}-ux",
   "name-ux/Gruntfile.js": "{%= name %}-ux/Gruntfile.js",
   "name-ux/module-include.xml": "{%= name %}-ux/module-include.xml",
-  "name-ux/name-ux.gradle": "{%= name %}-ux/{%= name %}-ux.gradle",
+  "name-ux/name-ux.gradle": "{%= name %}-ux/{%= gradleFile %}",
   "name-ux/README.md": "{%= name %}-ux/README.md",
   "name-ux/src/com/authorname/name/ClassName.java": "{%= name %}-ux/src/{%= fullClassName.replace(/\\./g, '/') %}.java",
   "name-ux/src/com/authorname/name/ModuleJsBuild.java": "{%= name %}-ux/src/{%= package.replace(/\\./g, '/') %}/B{%= jsBuildName %}.java",

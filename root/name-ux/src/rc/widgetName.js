@@ -11,14 +11,14 @@
  *
  * @module nmodule/{%= name %}/rc/{%= widgetName %}
  */
-define(['bajaux/Widget',
+define(['{%= widgetModule %}',
         'bajaux/mixin/subscriberMixIn',
         'jquery',
         'Promise',
         'hbs!nmodule/{%= name %}/rc/template/{%= widgetName %}-structure',
         'hbs!nmodule/{%= name %}/rc/template/{%= widgetName %}-content',
-        'css!nmodule/{%= name %}/rc/{%= widgetName %}'], function (
-        Widget,
+        'css!nmodule/{%= name %}/rc/{%= name %}'], function (
+        {%= widgetClass %},
         subscriberMixin,
         $,
         Promise,
@@ -35,17 +35,17 @@ define(['bajaux/Widget',
    * Complex value, allowing the user to select a slot.
    *
    * @class
-   * @extends module:bajaux/Widget
+   * @extends module:{%= widgetModule %}
    * @alias module:nmodule/{%= name %}/rc/{%= widgetName %}
    */
   var {%= widgetName %} = function {%= widgetName %}() {
     /** remember to call super constructor. Javascript won't do this for you */
-    Widget.apply(this, arguments);
+    {%= widgetClass %}.apply(this, arguments);
     subscriberMixin(this);
   };
 
   //extend and set up prototype chain
-  {%= widgetName %}.prototype = Object.create(Widget.prototype);
+  {%= widgetName %}.prototype = Object.create({%= widgetClass %}.prototype);
   {%= widgetName %}.prototype.constructor = {%= widgetName %};
 
   /**
@@ -161,7 +161,7 @@ define(['bajaux/Widget',
  *
  * @module nmodule/{%= name %}/rc/{%= widgetName %}
  */
-define(['bajaux/Widget', 'jquery', 'Promise'], function (Widget, $, Promise) {
+define(['{%= widgetModule %}', 'jquery', 'Promise'], function ({%= widgetClass %}, $, Promise) {
 
   'use strict';
 
@@ -169,15 +169,15 @@ define(['bajaux/Widget', 'jquery', 'Promise'], function (Widget, $, Promise) {
    * Description of your widget.
    *
    * @class
-   * @extends module:bajaux/Widget
+   * @extends module:{%= widgetModule %}
    * @alias module:nmodule/{%= name %}/rc/{%= widgetName %}
    */
   var {%= widgetName %} = function {%= widgetName %}() {
-    Widget.apply(this, arguments);
+    {%= widgetClass %}.apply(this, arguments);
   };
 
   //extend and set up prototype chain
-  {%= widgetName %}.prototype = Object.create(Widget.prototype);
+  {%= widgetName %}.prototype = Object.create({%= widgetClass %}.prototype);
   {%= widgetName %}.prototype.constructor = {%= widgetName %};
 
   /**

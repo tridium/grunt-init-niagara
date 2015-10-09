@@ -1,7 +1,6 @@
 'use strict';
 
-var fs = require('fs'),
-    path = require('path');
+var path = require('path');
 
 var superlatives = [
   'whimsical',
@@ -118,6 +117,14 @@ exports.template = function (grunt, init, done) {
     warning: 'Must be only letters, numbers, or underscores'
   };
 
+  var formFactorPrompt = {
+    message: 'bajaux form factor (mini/compact/max)',
+    name: 'formFactor',
+    default: 'mini',
+    warning: 'This defines the desired form factor of your bajaux Widget. ' +
+      'For a field editor, choose mini. For a fullscreen view, choose max.'
+  };
+
   var classNamePrompt = {
     message: 'Fully qualified class name for your Widget',
     name: 'fullClassName',
@@ -210,8 +217,8 @@ exports.template = function (grunt, init, done) {
       //the 'prompt' library
       if (value.toLowerCase() === 'y') {
         //we're creating a bajaux widget. prompt for a couple more bajaux things
-        insertPromptsAfter('bajaux', widgetNamePrompt, registerAgentPrompt, 
-          skeletonPrompt);
+        insertPromptsAfter('bajaux', widgetNamePrompt, formFactorPrompt,
+          registerAgentPrompt, skeletonPrompt);
       }
       done();
     }
@@ -228,7 +235,7 @@ exports.template = function (grunt, init, done) {
     init.prompt('bugs'),
     init.prompt('author_email'),
     init.prompt('node_version', '>= 0.8.0'),
-    init.prompt('npm_test', 'grunt karma')
+    init.prompt('npm_test', 'grunt ci')
   ];
 
 ////////////////////////////////////////////////////////////////
@@ -262,6 +269,16 @@ exports.template = function (grunt, init, done) {
       "grunt": "~0.4.1",
       "grunt-niagara": "^0.1.20"
     };
+    props.multiProject = props.author_name.toLowerCase().match('tridium');
+    props.gradleFile = props.multiProject ? props.name + '-ux.gradle' : 'build.gradle';
+    props.fe = String(props.formFactor).toLowerCase() === 'mini';
+    props.widgetClass = props.fe ? 'BaseEditor' : 'Widget';
+    props.widgetModule = props.fe ? 'nmodule/webEditors/rc/fe/baja/BaseEditor' : 'bajaux/Widget';
+    switch (String(props.formFactor).toLowerCase()) {
+      case 'mini': props.widgetInterface = 'BIFormFactorMini'; break;
+      case 'compact': props.widgetInterface = 'BIFormFactorCompact'; break;
+      case 'max': props.widgetInterface = 'BIFormFactorMax'; break;
+    }
 
     props.fullClassName = props.fullClassName || '';
 
