@@ -108,11 +108,11 @@ niagaraRjs {
       'i18nprecompile': moduleResource('js-ux', 'rc/require-handlebars-plugin/hbs/i18nprecompile'),
       'json2': moduleResource('js-ux', 'rc/require-handlebars-plugin/hbs/json2'),
       'underscore': moduleResource('js-ux', 'rc/underscore/underscore')
-    ]
+    ],
 
     // RequireJS optimization with Rhino can occasionally cause a stack
     // overflow if a module is particularly complex and the default JVM stack
-    // size is set too low. Uncomment to bump up the stack size if needed.
-    //,rhinoJvmArgs: [ '-Xss4m' ]
+    // size is set too low. Adjust stack size as needed.
+    rhinoJvmArgs: [ '-Xss4m' ]
   ]
 }
