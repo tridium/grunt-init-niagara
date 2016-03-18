@@ -11,6 +11,7 @@ niagaraModule {
   preferredSymbol = "{%= preferredSymbol %}"
   moduleName = "{%= name %}"
   runtimeProfile = "ux"
+  version = "{%= version %}"
 }
 
 dependencies {

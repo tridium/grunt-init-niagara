@@ -266,6 +266,7 @@ exports.template = function (grunt, init, done) {
     props.keywords = [];
     props.year = new Date().getFullYear();
     props.devDependencies = {
+	  "requirejs" : "^2.1",
       "grunt": "~0.4.1",
       "grunt-niagara": "^0.1.20"
     };
