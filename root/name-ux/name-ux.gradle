@@ -5,7 +5,12 @@
 apply from: "${System.getenv("niagara_home")}/etc/gradle/niagara.gradle"
 {% } %}
 
-description = "{%= description %}"
+ext {
+  name = "{%= name %}"
+  project.version = "{%= version %}"
+  project.group = "{%= author_name %}"
+  description = "{%= description %}"
+}
 
 niagaraModule {
   preferredSymbol = "{%= preferredSymbol %}"

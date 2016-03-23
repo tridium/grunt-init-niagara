@@ -224,11 +224,19 @@ exports.template = function (grunt, init, done) {
     }
   };
 
+  var authorPrompt = {
+    message: 'Name of author or organization',
+    name: 'author_name',
+    default: process.env.USER || process.env.USERNAME || 'Me',
+    warning: 'The author name will be used to generate copyright notices and ' +
+      'the module\'s vendor name.'
+  };
+
   allPrompts = [
     niagaraModuleNamePrompt,
     preferredSymbolPrompt,
     { name: 'description', message: 'Description of your Niagara module' },
-    init.prompt('author_name'),
+    authorPrompt,
     bajauxPrompt, //can add more prompts depending on answers
     init.prompt('version'),
     init.prompt('homepage'),
@@ -269,7 +277,7 @@ exports.template = function (grunt, init, done) {
       "grunt": "~0.4.1",
       "grunt-niagara": "^0.1.20"
     };
-    props.multiProject = props.author_name.toLowerCase().match('tridium');
+    props.multiProject = props.author_name.toLowerCase() === 'tridium';
     props.gradleFile = props.multiProject ? props.name + '-ux.gradle' : 'build.gradle';
     props.fe = String(props.formFactor).toLowerCase() === 'mini';
     props.widgetClass = props.fe ? 'BaseEditor' : 'Widget';
@@ -327,7 +335,7 @@ exports.template = function (grunt, init, done) {
       'http://gruntjs.com/getting-started' +
       '\n\n' +
       'Build the Niagara module with Gradle by typing: ' +
-      '_gradlew :' + props.name + '-ux:build_';
+      (props.multiProject ? '_gradlew :' + props.name + '-ux:build_' : '_gradlew build_');
       
     if (props.bajaux && !props.skeleton) {
       exports.after += '\n\n' +
