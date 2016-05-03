@@ -21,6 +21,7 @@
       lex: '/module/js/rc/lex/lexplugin',
       nmodule: '/module',
       'nmodule/{%= name %}': 'src',
+      'nmodule/{%= name %}Test': 'srcTest',
       Promise: '/module/js/rc/bluebird/bluebird',
       'niagara-test-server': '/niagara-test-server',
       underscore: '/module/js/rc/underscore/underscore'
