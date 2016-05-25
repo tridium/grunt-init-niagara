@@ -274,8 +274,8 @@ exports.template = function (grunt, init, done) {
     props.keywords = [];
     props.year = new Date().getFullYear();
     props.devDependencies = {
-      "grunt": "~0.4.1",
-      "grunt-niagara": "^0.1.20"
+      "grunt": "~1.0.1",
+      "grunt-niagara": "^0.1.23"
     };
     props.multiProject = props.author_name.toLowerCase() === 'tridium';
     props.gradleFile = props.multiProject ? props.name + '-ux.gradle' : 'build.gradle';
