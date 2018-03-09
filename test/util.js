@@ -87,7 +87,19 @@ function testRun(moduleName, choices, cb) {
   if (fs.existsSync(moduleName)) { deleteFolderRecursive(moduleName); }
   fs.mkdirSync(moduleName);
   doGruntInit(moduleName, choices.slice(), function (err) {
-    return err ? cb(err) : doGradlewBuild(moduleName, cb);
+    if (err) { return cb(err); }
+    doGradlewBuild(moduleName, function (err) {
+      if (err) { return cb(err); }
+      gruntCi(moduleName, cb);
+    });
+  });
+}
+
+function gruntCi(moduleName, cb) {
+  const cwd = path.join(process.cwd(), moduleName, moduleName + '-ux');
+  exec('yarn', [ 'install', '--pure-lockfile' ], cwd, function (err) {
+    if (err) { return cb(err); }
+    exec('grunt', [ 'ci' ], cwd, cb);
   });
 }
 

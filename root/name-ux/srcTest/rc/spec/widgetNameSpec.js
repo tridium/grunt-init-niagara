@@ -148,11 +148,11 @@ define(['baja!',
       });
 
       it("updates buttons when component adds slots", function () {
-        doPromise(stooges.add({ slot: 'shemp', value: true }))
+        doPromise(stooges.add({ slot: 'shemp', value: true })
           .then(function () {
             var buttons = elem.find('button');
             expect(buttons.eq(3).data('slot')).toBe('shemp');
-          });
+          }));
       });
     });
 
@@ -206,11 +206,11 @@ define(['nmodule/{%= name %}/rc/{%= widgetName %}',
 
     describe('#doInitialize()', function () {
       it('does something', function () {
-        doPromise(widget.initialize(elem))
+        doPromise(widget.initialize(elem)
           .then(function () {
             //assert something about the widget after initialization.
             //expect(widget.js().text()).toBe('ready to go');
-          });
+          }));
       });
     });
 
@@ -219,11 +219,11 @@ define(['nmodule/{%= name %}/rc/{%= widgetName %}',
         doPromise(widget.initialize(elem)
           .then(function () {
             return widget.load('something');
-          }))
+          })
           .then(function () {
             //assert something about the widget after value is loaded.
             //expect(widget.jq().find('input').val()).toBe('something good'):
-          });
+          }));
       });
     });
 
@@ -235,11 +235,11 @@ define(['nmodule/{%= name %}/rc/{%= widgetName %}',
           })
           .then(function () {
             return widget.read();
-          }))
+          })
           .then(function (result) {
             //assert something about the result read from the widget.
             //expect(result).toBe('something {%= superlative() %}');
-          });
+          }));
       });
     });
   });

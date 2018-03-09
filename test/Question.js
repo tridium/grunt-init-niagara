@@ -1,4 +1,5 @@
-var multiProject = process.argv.indexOf('--multi') >= 0;
+var multiProject = process.argv.indexOf('--multi') >= 0,
+  version = process.argv[process.argv.indexOf('--version') + 1] || '4.6';
 
 /**
  * Represents one question that may be answered during the grunt-init process.
@@ -69,6 +70,7 @@ Question.prototype.enumerateAllPaths = function enumerateAllPaths(allPaths, stac
  * question was answered a certain way.
  *
  *  name
+ *  target version
  *  symbol
  *  description
  *  * author (internal?)
@@ -86,7 +88,8 @@ Question.prototype.enumerateAllPaths = function enumerateAllPaths(allPaths, stac
  *  test command
  */
 Question.questions = {
-  'name': new Question('name', { 'testModule': 'symbol' }),
+  'name': new Question('name', { 'testModule': 'targetVersion' }),
+  'targetVersion': new Question('targetVersion', { [version]: 'symbol' }),
   'symbol': new Question('symbol', { 'tstMdl': 'description' }),
   'description': new Question('description', { 'test module description': 'author' }),
   'author': new Question('author', (function () {

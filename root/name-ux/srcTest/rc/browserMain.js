@@ -15,10 +15,11 @@
       bajaScript: '/module/bajaScript/rc',
       bajaux: '/module/bajaux/rc',
       css: '/module/js/com/tridium/js/ext/require/css',
-      Handlebars: '/module/js/rc/handlebars/handlebars-v2.0.0',
-      hbs: '/module/js/rc/require-handlebars-plugin/hbs.built',
-      jquery: '/module/js/rc/jquery/jquery-1.8.2.min',
-      lex: '/module/js/rc/lex/lexplugin',
+      Handlebars: '/module/js/rc/handlebars/handlebars-v{%= handlebarsVersion %}',
+      hbs: '/module/js/rc/require-handlebars-plugin/hbs.built.min',
+      jquery: '/module/js/rc/jquery/jquery-{%= jqueryVersion %}.min',
+      lex: '/module/js/rc/lex/lexplugin',{% if (hasLogJs) { %}
+      log: '/module/js/rc/log/logPlugin',{% } %}
       nmodule: '/module',
       'nmodule/{%= name %}': 'src',
       'nmodule/{%= name %}Test': 'srcTest',

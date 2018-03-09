@@ -100,6 +100,20 @@ exports.template = function (grunt, init, done) {
       }
     }
   }
+
+  function parseVersion(versionStr) {
+    const [ match, major, minor ] = (/^(\d+)\.(\d+)$/.exec(versionStr.trim()) || [])
+      .map(n => parseInt(n, 10));
+
+    return match && {
+      major,
+      minor,
+      compareTo: version => {
+        const other = parseVersion(version);
+        return major === other.major ? minor - other.minor : major - other.major;
+      }
+    };
+  }
   
 ////////////////////////////////////////////////////////////////
 // Definitions of prompts
@@ -181,6 +195,14 @@ exports.template = function (grunt, init, done) {
     warning: 'Must be only letters, numbers or underscores.'
   };
 
+  const targetNiagaraVersionPrompt = {
+    message: 'What Niagara version will you build your module against?',
+    name: 'targetVersion',
+    default: '4.4',
+    validator: (value, done) => done(!!parseVersion(value)),
+    warning: 'Must be in major.minor format, e.g. "4.4".'
+  };
+
   var preferredSymbolPrompt = {
     message: 'Shortened preferred symbol for your Niagara module',
     name: 'preferredSymbol',
@@ -234,6 +256,7 @@ exports.template = function (grunt, init, done) {
 
   allPrompts = [
     niagaraModuleNamePrompt,
+    targetNiagaraVersionPrompt,
     preferredSymbolPrompt,
     { name: 'description', message: 'Description of your Niagara module' },
     authorPrompt,
@@ -270,6 +293,10 @@ exports.template = function (grunt, init, done) {
         file.match('.hbs');
     }
 
+    const targetVersion = parseVersion(props.targetVersion),
+      v44OrLater = targetVersion.compareTo('4.4') >= 0,
+      v46OrLater = targetVersion.compareTo('4.6') >= 0;
+      
     //fix/tweak our properties (to be used by templates)
     props.keywords = [];
     props.year = new Date().getFullYear();
@@ -299,6 +326,10 @@ exports.template = function (grunt, init, done) {
     props.moduleName = niagaraModuleName;
     props.jsBuildName = capitalizeFirstLetter(props.moduleName) + 'JsBuild';
     props.widgetName = props.widgetName === undefined ? 'NotAWidget' : props.widgetName;
+
+    props.jqueryVersion = v44OrLater ? '3.2.0' : '2.1.1';
+    props.handlebarsVersion = v44OrLater ? '4.0.6' : '2.0.0';
+    props.hasLogJs = v46OrLater;
 
     var files = init.filesToCopy(props);
 
