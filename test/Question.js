@@ -1,5 +1,7 @@
-var multiProject = process.argv.indexOf('--multi') >= 0,
-  version = process.argv[process.argv.indexOf('--version') + 1] || '4.6';
+var argv = process.argv,
+  multiProject = argv.indexOf('--multi') >= 0,
+  versionIndex = process.argv.indexOf('--version'),
+  version = versionIndex >= 0 ? argv[versionIndex + 1] : '4.6';
 
 /**
  * Represents one question that may be answered during the grunt-init process.

@@ -1,34 +1,43 @@
-/*
+{%
+  // ---------------------
+  // Version 4 Gradle File
+  // ---------------------
+if (gradleVersion === '4') { %}/*
  * Copyright (c) {%= year %} {%= author_name %}. All Rights Reserved.
  */
-{% if (!multiProject) { %}
-apply from: "${System.getenv("niagara_home")}/etc/gradle/niagara.gradle"
-{% } %}
-
-ext {
-  name = "{%= name %}"
-  project.version = "{%= version %}"
-  project.group = "{%= author_name %}"
-  description = "{%= description %}"
-}
+ 
+{% if (supportsPluginsBlock) { %}plugins {
+  id "com.tridium.niagara-module"
+  id "com.tridium.niagara-grunt"
+}{% } %}
+{% if (isThirdParty) { %}version = "{%= version %}"
+description = "{%= description %}"{% } %}
 
 niagaraModule {
   preferredSymbol = "{%= preferredSymbol %}"
   moduleName = "{%= name %}"
-  runtimeProfile = "ux"
-}
+  runtimeProfile = "ux"{% if (supportsVendor) { %}
+  vendor = "{%= author_name %}"
+{% } %}}
 
 dependencies {
-  {% if (multiProject) { %}compile project(':js-ux'){% } else { %}compile 'Tridium:js-ux:4.0.0'{% } %}
-  {% if (bajaux && fullClassName) { if (multiProject) { %}compile project(':bajaux-ux')
+  {% if (isFirstParty) { %}compile project(':js-ux'){% } else { %}compile 'Tridium:js-ux:4.0.0'{% } 
+    if (bajaux && fullClassName) {
+      if (isFirstParty) { %}
+  compile project(':bajaux-ux')
   compile project(':baja')
   compile project(':web-rt'){% if (fe) { %}
-  compile project(':webEditors-ux'){% } } else { %}compile 'Tridium:nre:4.0.0'
+  compile project(':webEditors-ux'){% } 
+      } else { %}
+  compile 'Tridium:nre:4.0.0'
   compile 'Tridium:baja:4.0.0'
   compile 'Tridium:hx-wb:4.0.0'
   compile 'Tridium:bajaux-ux:4.0.0'
   compile 'Tridium:web-rt:4.0.0'{% if (fe) { %}
-  compile 'Tridium:webEditors-ux:4.0.0'{% } } } %}
+  compile 'Tridium:webEditors-ux:4.0.0'{% }
+      }
+    }
+%}
 }
 
 jar {
@@ -44,8 +53,10 @@ moduleTestJar {
   }
 }
 
-{% if (multiProject) { %}apply plugin: 'com.tridium.niagara-rjs'{% } %}
-
+{% if (hasGruntPlugin) {
+   if (!supportsPluginsBlock) { %}apply plugin: "com.tridium.niagara-grunt"
+{% } %}gruntBuild { tasks 'requirejs' }
+{% } else { %}
 niagaraRjs {
   builds = [
     '{%= name %}': [
@@ -55,7 +66,7 @@ niagaraRjs {
         'nmodule/{%= name %}/rc/{%= widgetName %}'{% } %}
       ]
     ]
-  ]{% if (!multiProject) { %}
+  ]
 
   jsdocBuilds = [
     '{%= name %}': [
@@ -68,7 +79,7 @@ niagaraRjs {
       destinationDir: 'src/jsdoc',
       options: [ '--tutorials', file('tutorials').toPath() ]
     ]
-  ]{% } %}
+  ]
 
   options = [
     //BajaScript and lexicons cannot legitimately start without running a
@@ -122,3 +133,64 @@ niagaraRjs {
     rhinoJvmArgs: [ '-Xss4m' ]
   ]
 }
+{% }
+// ---------------------
+// Version 5 Gradle File
+// ---------------------
+} else {
+%}/*
+ * Copyright (c) {%= year %} {%= author_name %}. All Rights Reserved.
+ */
+import com.tridium.gradle.plugins.module.task.Module
+import com.tridium.gradle.plugins.grunt.task.GruntBuildTask
+
+plugins {
+  id "com.tridium.niagara-module"
+  id "com.tridium.bajadoc"
+  id "com.tridium.niagara-grunt"
+}
+
+description = "{%= description %}"
+
+moduleManifest {
+  preferredSymbol = "{%= preferredSymbol %}"
+  moduleName = "{%= name %}"
+  runtimeProfile = "ux"
+}
+
+dependencies {
+  {% if (isFirstParty) { %}compile project(':js-ux'){% } else { %}compile 'Tridium:js-ux:4.0.0'{% } %}
+  {% if (bajaux && fullClassName) { if (isFirstParty) { %}compile project(':bajaux-ux')
+  compile project(':baja')
+  compile project(':web-rt'){% if (fe) { %}
+  compile project(':webEditors-ux'){% } } else { %}compile 'Tridium:nre:4.0.0'
+  compile 'Tridium:baja:4.0.0'
+  compile 'Tridium:hx-wb:4.0.0'
+  compile 'Tridium:bajaux-ux:4.0.0'
+  compile 'Tridium:web-rt:4.0.0'{% if (fe) { %}
+  compile 'Tridium:webEditors-ux:4.0.0'{% } } } %}
+}
+
+tasks.named("module", Module) {
+  from('src') {
+    include 'jsdoc/'
+    include 'rc/'
+  }
+}
+
+tasks.named("moduleTestJar", Module) {
+  from('srcTest') {
+    include 'rc/'
+  }
+}
+
+tasks.named("gruntBuild", GruntBuildTask) {
+  tasks('requirejs')
+}
+
+compilerWarnings {
+  cast = true
+  unchecked = true
+  rawtypes = true
+}
+{% } %}

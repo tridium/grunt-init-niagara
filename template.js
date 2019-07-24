@@ -1,3 +1,5 @@
+/* eslint-env node */
+
 'use strict';
 
 var path = require('path');
@@ -295,17 +297,20 @@ exports.template = function (grunt, init, done) {
 
     const targetVersion = parseVersion(props.targetVersion),
       v44OrLater = targetVersion.compareTo('4.4') >= 0,
-      v46OrLater = targetVersion.compareTo('4.6') >= 0;
+      v46OrLater = targetVersion.compareTo('4.6') >= 0,
+      v49OrLater = targetVersion.compareTo('4.9') >= 0;
       
     //fix/tweak our properties (to be used by templates)
     props.keywords = [];
     props.year = new Date().getFullYear();
     props.devDependencies = {
       "grunt": "~1.0.1",
-      "grunt-niagara": "^0.1.23"
+      "grunt-niagara": "^1.1.0"
     };
-    props.multiProject = props.author_name.toLowerCase() === 'tridium';
-    props.gradleFile = props.multiProject ? props.name + '-ux.gradle' : 'build.gradle';
+    props.isFirstParty = props.author_name.toLowerCase() === 'tridium';
+    props.isThirdParty = !props.isFirstParty;
+    props.gradleVersion = props.isThirdParty ? '4' : '5';
+    props.gradleFile = props.name + '-ux.gradle';
     props.fe = String(props.formFactor).toLowerCase() === 'mini';
     props.widgetClass = props.fe ? 'BaseEditor' : 'Widget';
     props.widgetModule = props.fe ? 'nmodule/webEditors/rc/fe/baja/BaseEditor' : 'bajaux/Widget';
@@ -327,9 +332,12 @@ exports.template = function (grunt, init, done) {
     props.jsBuildName = capitalizeFirstLetter(props.moduleName) + 'JsBuild';
     props.widgetName = props.widgetName === undefined ? 'NotAWidget' : props.widgetName;
 
-    props.jqueryVersion = v44OrLater ? '3.2.0' : '2.1.1';
-    props.handlebarsVersion = v44OrLater ? '4.0.6' : '2.0.0';
+    props.jqueryVersion = v49OrLater ? '3.4.1' : v44OrLater ? '3.2.0' : '2.1.1';
+    props.handlebarsVersion = v49OrLater ? '4.1.2' : v44OrLater ? '4.0.6' : '2.0.0';
     props.hasLogJs = v46OrLater;
+    props.hasGruntPlugin = v46OrLater;
+    props.supportsPluginsBlock = props.isFirstParty;
+    props.supportsVendor = v46OrLater;
 
     var files = init.filesToCopy(props);
 
@@ -366,7 +374,7 @@ exports.template = function (grunt, init, done) {
       'http://gruntjs.com/getting-started' +
       '\n\n' +
       'Build the Niagara module with Gradle by typing: ' +
-      (props.multiProject ? '_gradlew :' + props.name + '-ux:build_' : '_gradlew build_');
+      ('_gradlew :' + props.name + '-ux:build_');
       
     if (props.bajaux && !props.skeleton) {
       exports.after += '\n\n' +

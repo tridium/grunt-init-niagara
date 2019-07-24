@@ -1,6 +1,8 @@
-/*jshint node: true */
+/* jshint node: true *//* eslint-env node */
 
 "use strict";
+
+var loadTasksRelative = require('grunt-niagara/lib/loadTasksRelative');
 
 var SRC_FILES = [
     'src/rc/**/*.js',
@@ -21,12 +23,13 @@ module.exports = function runGrunt(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 
-    jsdoc:     { src: SRC_FILES.concat(['README.md']) },
-    jshint:    { src: ALL_FILES },
-    plato:     { src: SRC_FILES },
-    watch:     { src: ALL_FILES },
-    karma:     {},
-    niagara:   {
+    jsdoc: { src: SRC_FILES.concat(['README.md']) },
+    jshint: { src: ALL_FILES },
+    plato: { src: SRC_FILES },
+    watch: { src: ALL_FILES },
+    karma: {},
+    requirejs: {},
+    niagara: {
       station: {
         stationName: '{%= name %}',
         forceCopy: true,
@@ -35,5 +38,5 @@ module.exports = function runGrunt(grunt) {
     }
   });
 
-  grunt.loadNpmTasks('grunt-niagara');
+  loadTasksRelative(grunt, 'grunt-niagara');
 };

@@ -1,9 +1,9 @@
-var fs = require('fs'),
-    spawn = require('child_process').spawn,
-    path = require('path'),
-    Question = require('./Question'),
-    multiProject = process.argv.indexOf('--multi') >= 0,
-    niagara_dev_home = process.env.niagara_dev_home;
+const fs = require('fs'),
+  { spawn } = require('child_process'),
+  path = require('path'),
+  Question = require('./Question'),
+  multiProject = process.argv.indexOf('--multi') >= 0,
+  niagara_dev_home = process.env.niagara_dev_home || '.';
 
 if (multiProject && !niagara_dev_home) {
   throw new Error('niagara_dev_home environment variable not set');
@@ -70,8 +70,8 @@ function doGruntInit(moduleName, choices, cb) {
  * @param {Function} cb
  */
 function doGradlewBuild(moduleName, cb) {
-  var cwd = multiProject ? niagara_dev_home : path.join(process.cwd(), moduleName, moduleName + '-ux'),
-      buildCmd = multiProject ? ':' + moduleName + '-ux:build' : 'build';
+  var cwd = niagara_dev_home,
+      buildCmd = ':' + moduleName + '-ux:build';
   // disable daemon, since we're wiping out the directory in between
   exec('gradlew', [buildCmd, '-a', '--no-daemon'], cwd, cb);
 }
@@ -97,6 +97,11 @@ function testRun(moduleName, choices, cb) {
 
 function gruntCi(moduleName, cb) {
   const cwd = path.join(process.cwd(), moduleName, moduleName + '-ux');
+
+  if (multiProject) {
+    return exec('grunt', [ 'ci' ], cwd, cb);
+  }
+  
   exec('yarn', [ 'install', '--pure-lockfile' ], cwd, function (err) {
     if (err) { return cb(err); }
     exec('grunt', [ 'ci' ], cwd, cb);
@@ -105,11 +110,6 @@ function gruntCi(moduleName, cb) {
 
 
 /**
- * Exec a command - child_process.spawn does not support 'grunt-init' since it's
- * not an exe, but we can't use child_process.exec because we need to write to
- * its stdin. So: hackity hack
- * https://github.com/nodejs/node-v0.x-archive/issues/2318#issuecomment-3220048
- *
  * @param {String} cmd
  * @param {Array} args
  * @param {String} cwd
@@ -117,7 +117,7 @@ function gruntCi(moduleName, cb) {
  * @returns the spawned process
  */
 function exec(cmd, args, cwd, cb) {
-  var p = spawn('cmd', ['/s', '/c', cmd].concat(args), { cwd: cwd, stdio: 'pipe' });
+  var p = spawn(cmd, args, { cwd: cwd, stdio: 'pipe', shell: true });
 
   p.stdout.pipe(process.stdout);
   p.stderr.pipe(process.stderr);

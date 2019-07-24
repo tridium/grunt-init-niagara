@@ -49,7 +49,7 @@
     karmaUtils.setupAndRunSpecs({
       user: 'admin',
       pass: 'asdf1234',
-      specs: ['srcTest/rc/spec/allSpecs']
+      specs: ['nmodule/{%= name %}Test/rc/spec/allSpecs']
     }, function (err) {
       if (err) { console.error(err); }
     });
