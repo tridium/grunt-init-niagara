@@ -14,7 +14,8 @@
         "baja": "/module/bajaScript/rc/plugin/baja",
         "bajaScript": "/module/bajaScript/rc",
         "bajaux": "/module/bajaux/rc",
-        "lex": "/module/js/rc/lex/lexplugin",
+        "lex": "/module/js/rc/lex/lexplugin",{% if (hasLogJs) { %}
+        "log": "/module/js/rc/log/logPlugin",{% } %}
         "css": "/module/js/com/tridium/js/ext/require/css",
 
         "jquery": "/module/js/rc/jquery/jquery-{%= jqueryVersion %}",

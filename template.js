@@ -373,7 +373,8 @@ exports.template = function (grunt, init, done) {
       '\n\n' +
       'http://gruntjs.com/getting-started' +
       '\n\n' +
-      'Build the Niagara module with Gradle by typing: ' +
+      'Build the Niagara module with Gradle by changing to your Niagara User ' +
+      'Home and typing: ' +
       ('_gradlew :' + props.name + '-ux:build_');
       
     if (props.bajaux && !props.skeleton) {
