@@ -188,9 +188,4 @@ tasks.named("gruntBuild", GruntBuildTask) {
   tasks('requirejs')
 }
 
-compilerWarnings {
-  cast = true
-  unchecked = true
-  rawtypes = true
-}
 {% } %}
