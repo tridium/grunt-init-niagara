@@ -15,7 +15,7 @@
       bajaScript: '/module/bajaScript/rc',
       bajaux: '/module/bajaux/rc',
       css: '/module/js/com/tridium/js/ext/require/css',
-      Handlebars: '/module/js/rc/handlebars/handlebars-v{%= handlebarsVersion %}',
+      Handlebars: '/module/js/rc/handlebars/{%= handlebarsFilename %}',
       hbs: '/module/js/rc/require-handlebars-plugin/hbs.built.min',
       jquery: '/module/js/rc/jquery/jquery-{%= jqueryVersion %}.min',
       lex: '/module/js/rc/lex/lexplugin',{% if (hasLogJs) { %}

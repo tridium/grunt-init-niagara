@@ -333,7 +333,7 @@ exports.template = function (grunt, init, done) {
     props.widgetName = props.widgetName === undefined ? 'NotAWidget' : props.widgetName;
 
     props.jqueryVersion = v49OrLater ? '3.4.1' : v44OrLater ? '3.2.0' : '2.1.1';
-    props.handlebarsVersion = v49OrLater ? '4.1.2' : v44OrLater ? '4.0.6' : '2.0.0';
+    props.handlebarsFilename = v49OrLater ? 'handlebars' : v44OrLater ? 'handlebars-v4.0.6' : 'handlebars-v2.0.0';
     props.hasLogJs = v46OrLater;
     props.hasGruntPlugin = v46OrLater;
     props.supportsPluginsBlock = props.isFirstParty;
