@@ -2,6 +2,8 @@
 
 'use strict';
 
+/* eslint-env node */
+
 var path = require('path');
 
 var superlatives = [
@@ -69,7 +71,7 @@ function filterOutProps(obj, filter) {
 
 //return a random superlative
 function superlative() {
-  return superlatives.splice( Math.floor(Math.random() * superlatives.length), 1 );
+  return superlatives.splice(Math.floor(Math.random() * superlatives.length), 1);
 }
 
 exports.template = function (grunt, init, done) {
@@ -92,7 +94,7 @@ exports.template = function (grunt, init, done) {
         idx = findPromptIndexByName(allPrompts, name);
 
     if (idx === -1) {
-      throw 'name ' + name + ' not found';
+      throw new Error('name ' + name + ' not found');
     }
 
     while (prompts.length) {
@@ -121,7 +123,7 @@ exports.template = function (grunt, init, done) {
 // Definitions of prompts
 ////////////////////////////////////////////////////////////////
 
-  var widgetNamePrompt = {
+  const widgetNamePrompt = {
     message: 'bajaux Widget name',
     name: 'widgetName',
     default: function (value, data, done) {
@@ -133,7 +135,7 @@ exports.template = function (grunt, init, done) {
     warning: 'Must be only letters, numbers, or underscores'
   };
 
-  var formFactorPrompt = {
+  const formFactorPrompt = {
     message: 'bajaux form factor (mini/compact/max)',
     name: 'formFactor',
     default: 'mini',
@@ -141,7 +143,7 @@ exports.template = function (grunt, init, done) {
       'For a field editor, choose mini. For a fullscreen view, choose max.'
   };
 
-  var classNamePrompt = {
+  const classNamePrompt = {
     message: 'Fully qualified class name for your Widget',
     name: 'fullClassName',
     default: function (value, data, done) {
@@ -151,7 +153,7 @@ exports.template = function (grunt, init, done) {
         '.B' + data.widgetName);
     },
     validator: function (value, done) {
-      done(value.split('.').pop().charAt(0) === 'B')
+      done(value.split('.').pop().charAt(0) === 'B');
     },
     warning: 'Class must be fully qualified and start with B'
   };
@@ -160,7 +162,7 @@ exports.template = function (grunt, init, done) {
    * If you choose to register as an agent on a type, we will generate you a
    * Java class. This will add another prompt for the class name to use.
    */
-  var registerAgentPrompt = {
+  const registerAgentPrompt = {
     message: 'Register your Widget as an agent on a Type? (Leave blank for none)',
     name: 'agentType',
     validator: function (value, done) {
@@ -178,7 +180,7 @@ exports.template = function (grunt, init, done) {
     warning: 'Must be a valid Niagara type spec'
   };
 
-  var niagaraModuleNamePrompt = {
+  const niagaraModuleNamePrompt = {
     message: 'Niagara module name',
     name: 'name',
     default: function (value, data, done) {
@@ -205,10 +207,10 @@ exports.template = function (grunt, init, done) {
     warning: 'Must be in major.minor format, e.g. "4.4".'
   };
 
-  var preferredSymbolPrompt = {
+  const preferredSymbolPrompt = {
     message: 'Shortened preferred symbol for your Niagara module',
     name: 'preferredSymbol',
-    default: function(value, data, done) {
+    default: function (value, data, done) {
       var name = data.name;
       done(null, name.replace(/[aeiou]|[^A-Za-z0-9]/g, ''));
     },
@@ -218,7 +220,7 @@ exports.template = function (grunt, init, done) {
   /**
    * Decide if you want template files fleshed out with demo logic, or barebones
    */
-  var skeletonPrompt = {
+  const skeletonPrompt = {
     message: 'Only generate skeleton files?',
     name: 'skeleton',
     default: 'y/N',
@@ -232,7 +234,7 @@ exports.template = function (grunt, init, done) {
    * If you create a bajaux Widget, adds prompts for the name of the Widget and
    * whether you want to register it as an agent.
    */
-  var bajauxPrompt = {
+  const bajauxPrompt = {
     message: 'Would you like to create a bajaux Widget?',
     name: 'bajaux',
     default: 'y/N',
@@ -248,7 +250,7 @@ exports.template = function (grunt, init, done) {
     }
   };
 
-  var authorPrompt = {
+  const authorPrompt = {
     message: 'Name of author or organization',
     name: 'author_name',
     default: process.env.USER || process.env.USERNAME || 'Me',
@@ -294,6 +296,8 @@ exports.template = function (grunt, init, done) {
         file.match(props.name + 'Spec\\.js$') ||
         file.match('.hbs');
     }
+
+    if (err) { throw err; }
 
     const targetVersion = parseVersion(props.targetVersion),
       v44OrLater = targetVersion.compareTo('4.4') >= 0,
