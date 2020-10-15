@@ -6,12 +6,12 @@
   if (!skeleton) {
 
 %}
-require(['baja!',
+require([ 'baja!',
          'bajaux/events',
          'nmodule/{%= name %}/rc/{%= name %}',
          'jquery',
          'nmodule/{%= name %}/rc/{%= widgetName %}',
-         'hbs!nmodule/{%= name %}/rc/template/{%= name %}'], function (
+         'hbs!nmodule/{%= name %}/rc/template/{%= name %}' ], function (
          baja,
          events,
          {%= name %},
@@ -44,11 +44,13 @@ require(['baja!',
         widget.read()
           .then(function (value) {
             description.text(value);
-          });
+          })
+          .catch(baja.error);
       });
 
       return widget.load(comp);
-    });
+    })
+    .catch(baja.error);
 });
 {%
 
@@ -60,7 +62,7 @@ require(['baja!',
 
 
 %}
-require(['nmodule/{%= name %}/rc/{%= widgetName %}'], function ({%= widgetName %}) {
+require([ 'nmodule/{%= name %}/rc/{%= widgetName %}' ], function ({%= widgetName %}) {
   'use strict';
 });
 {% 
@@ -73,7 +75,7 @@ require(['nmodule/{%= name %}/rc/{%= widgetName %}'], function ({%= widgetName %
 
 
 %}
-require(['nmodule/{%= name %}/rc/{%= name %}'], function ({%= name %}) {
+require([ 'nmodule/{%= name %}/rc/{%= name %}' ], function ({%= name %}) {
   'use strict';
 });
 {%

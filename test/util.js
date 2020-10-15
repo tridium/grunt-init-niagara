@@ -1,3 +1,8 @@
+/* eslint-disable camelcase */
+/* eslint-env node */
+
+'use strict';
+
 const fs = require('fs'),
   { spawn } = require('child_process'),
   path = require('path'),
@@ -51,7 +56,7 @@ module.exports.testAllPaths = function testAllPaths(cb) {
  */
 function doGruntInit(moduleName, choices, cb) {
   var cwd = path.join(process.cwd(), moduleName);
-  var p = exec('grunt-init', ['grunt-init-niagara'], cwd, cb);
+  var p = exec('grunt-init', [ 'grunt-init-niagara' ], cwd, cb);
 
   setTimeout(function writeChoice() {
     if (!choices.length) {
@@ -73,7 +78,7 @@ function doGradlewBuild(moduleName, cb) {
   var cwd = niagara_dev_home,
       buildCmd = ':' + moduleName + '-ux:build';
   // disable daemon, since we're wiping out the directory in between
-  exec('gradlew', [buildCmd, '-a', '--no-daemon'], cwd, cb);
+  exec('gradlew', [ buildCmd, '-a', '--no-daemon' ], cwd, cb);
 }
 
 /**
@@ -127,9 +132,9 @@ function exec(cmd, args, cwd, cb) {
   });
   p.on('exit', function (code) {
     if (code === null) {
-      cb('process "' + cmd + '" terminated abnormally');
+      cb(new Error('process "' + cmd + '" terminated abnormally'));
     } else if (code) {
-      cb('process returned error code ' + code);
+      cb(new Error('process returned error code ' + code));
     } else {
       cb(null, code);
     }
@@ -143,10 +148,10 @@ function exec(cmd, args, cwd, cb) {
  * @param path
  */
 function deleteFolderRecursive(path) {
-  if( fs.existsSync(path) ) {
-    fs.readdirSync(path).forEach(function(file,index){
+  if (fs.existsSync(path)) {
+    fs.readdirSync(path).forEach(function (file, index) {
       var curPath = path + "/" + file;
-      if(fs.lstatSync(curPath).isDirectory()) { // recurse
+      if (fs.lstatSync(curPath).isDirectory()) { // recurse
         deleteFolderRecursive(curPath);
       } else { // delete file
         fs.unlinkSync(curPath);

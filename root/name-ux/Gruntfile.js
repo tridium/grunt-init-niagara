@@ -4,29 +4,44 @@
 
 var loadTasksRelative = require('grunt-niagara/lib/loadTasksRelative');
 
-var SRC_FILES = [
-    'src/rc/**/*.js',
-    'Gruntfile.js',
-    '!src/rc/**/*.built.js',
-    '!src/rc/**/*.min.js'
-  ],
-  SPEC_FILES = [
-    'srcTest/rc/spec/**/*.js'
-  ],
-  TEST_FILES = [
-    'srcTest/rc/*.js'
-  ],
-  ALL_FILES = SRC_FILES.concat(SPEC_FILES).concat(TEST_FILES);
+const SRC_FILES = [
+  'src/rc/**/*.js',
+  'Gruntfile.js'
+];
+const TEST_FILES = [
+  'srcTest/rc/**/*.js'
+];
+const JS_FILES = SRC_FILES.concat(TEST_FILES);
+const ALL_FILES = JS_FILES.concat('src/rc/**/*.css');
 
 module.exports = function runGrunt(grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 
-    jsdoc: { src: SRC_FILES.concat(['README.md']) },
-    jshint: { src: ALL_FILES },
-    plato: { src: SRC_FILES },
-    watch: { src: ALL_FILES },
+    jsdoc: {
+      src: SRC_FILES.concat([ 'README.md' ])
+    },
+    eslint: {
+      src: JS_FILES{% if (jsx) { %},
+      options: {
+        plugins: [ 'react' ]
+      }{% } %}
+    },
+    babel: {
+      options: {
+        presets: [ '@babel/preset-env' ]{% if (jsx) { %},
+        plugins: [ '@babel/plugin-transform-react-jsx' ]{% } %}
+      }{% if (jsx) { %},
+      coverage: {
+        options: {
+          plugins: [ '@babel/plugin-transform-react-jsx', 'istanbul' ]
+        }
+      }{% } %}
+    },
+    watch: {
+      src: ALL_FILES
+    },
     karma: {},
     requirejs: {},
     niagara: {

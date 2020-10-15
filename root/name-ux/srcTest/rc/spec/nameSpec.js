@@ -1,10 +1,9 @@
-define(['nmodule/{%= name %}/rc/{%= name %}'], function ({%= name %}) {
+define([ 'nmodule/{%= name %}/rc/{%= name %}' ], function ({%= name %}) {
   'use strict';
 
-  describe("nmodule/{%= name %}/rc/{%= name %}", function () {
-    it("can extol its own virtues", function () {
+  describe("nmodule/{%= name %}/rc/{%= name %}", () => {
+    it("can extol its own virtues", () => {
       expect({%= name %}.extolVirtues()).toBe('{%= name %} is great!');
     });
   });
-
 });

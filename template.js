@@ -76,7 +76,8 @@ function superlative() {
 
 exports.template = function (grunt, init, done) {
   var niagaraModuleName,
-      allPrompts;
+      allPrompts,
+      currentNiagaraVersion;
       
   /**
    * Insert the given prompts after the the prompt specified by name. They will
@@ -177,7 +178,9 @@ exports.template = function (grunt, init, done) {
 
       return done(false);
     },
-    warning: 'Must be a valid Niagara type spec'
+    warning: 'Registering your Widget as an agent on a Type will mark it as an' +
+      'editor for that Type. Must be a valid Niagara type spec such as ' +
+      'baja:String.'
   };
 
   const niagaraModuleNamePrompt = {
@@ -203,7 +206,10 @@ exports.template = function (grunt, init, done) {
     message: 'What Niagara version will you build your module against?',
     name: 'targetVersion',
     default: '4.4',
-    validator: (value, done) => done(!!parseVersion(value)),
+    validator: (value, done) => {
+      currentNiagaraVersion = parseVersion(value);
+      done(!!currentNiagaraVersion);
+    },
     warning: 'Must be in major.minor format, e.g. "4.4".'
   };
 
@@ -224,6 +230,13 @@ exports.template = function (grunt, init, done) {
     message: 'Only generate skeleton files?',
     name: 'skeleton',
     default: 'y/N',
+    validator: function (value, done) {
+      if (value.toLowerCase() !== 'y' && currentNiagaraVersion &&
+        currentNiagaraVersion.compareTo('4.10') >= 0) {
+        insertPromptsAfter('skeleton', jsxPrompt);
+      }
+      done();
+    },
     warning: 'y: Your widget files will be the bare ' +
       'minimum structure of a bajaux widget. N: Your widget files will contain ' +
       'demo logic to examine and modify. If this is your first time using ' +
@@ -250,6 +263,16 @@ exports.template = function (grunt, init, done) {
     }
   };
 
+  const jsxPrompt = {
+    message: 'Would you like to use JSX to create your Widget?',
+    name: 'jsx',
+    default: 'y/N',
+    warning: 'New bajaux APIs in Niagara 4.10 allow the usage of JSX when ' +
+      'creating your Widgets. These APIs are in _Development_ status. They are ' +
+      'Niagara-specific and they are not the same thing as React. See the ' +
+      'bajaux documentation for full details.'
+  };
+
   const authorPrompt = {
     message: 'Name of author or organization',
     name: 'author_name',
@@ -269,7 +292,7 @@ exports.template = function (grunt, init, done) {
     init.prompt('homepage'),
     init.prompt('bugs'),
     init.prompt('author_email'),
-    init.prompt('node_version', '>= 0.8.0'),
+    init.prompt('node_version', '>= 10.22.0'),
     init.prompt('npm_test', 'grunt ci')
   ];
 
@@ -300,17 +323,28 @@ exports.template = function (grunt, init, done) {
     if (err) { throw err; }
 
     const targetVersion = parseVersion(props.targetVersion),
-      v44OrLater = targetVersion.compareTo('4.4') >= 0,
       v46OrLater = targetVersion.compareTo('4.6') >= 0,
-      v49OrLater = targetVersion.compareTo('4.9') >= 0;
-      
+      v49OrLater = targetVersion.compareTo('4.9') >= 0,
+      v410OrLater = targetVersion.compareTo('4.10') >= 0;
+
     //fix/tweak our properties (to be used by templates)
     props.keywords = [];
     props.year = new Date().getFullYear();
     props.devDependencies = {
-      "grunt": "~1.0.1",
-      "grunt-niagara": "^1.1.0"
+      "grunt": "^1.3.0",
+      "grunt-niagara": "^2.0.0-alpha.14",
+      "@babel/core": "^7.0.0",
+      "@babel/preset-env": "^7.0.0",
+      "babel-plugin-istanbul": "^6.0.0"
     };
+
+    if (props.jsx) {
+      props.devDependencies['@babel/plugin-transform-react-jsx'] = '^7.10.0';
+      props.devDependencies['eslint-plugin-react'] = '^7.20.0';
+    } else {
+      props.jsx = false;
+    }
+
     props.isFirstParty = props.author_name.toLowerCase() === 'tridium';
     props.isThirdParty = !props.isFirstParty;
     props.gradleVersion = props.isThirdParty ? '4' : '5';
@@ -336,12 +370,13 @@ exports.template = function (grunt, init, done) {
     props.jsBuildName = capitalizeFirstLetter(props.moduleName) + 'JsBuild';
     props.widgetName = props.widgetName === undefined ? 'NotAWidget' : props.widgetName;
 
-    props.jqueryVersion = v49OrLater ? '3.4.1' : v44OrLater ? '3.2.0' : '2.1.1';
+    props.jqueryVersion = v49OrLater ? '3.4.1' : '3.2.0';
     props.handlebarsFilename = v49OrLater ? 'handlebars' : v44OrLater ? 'handlebars-v4.0.6' : 'handlebars-v2.0.0';
     props.hasLogJs = v46OrLater;
     props.hasGruntPlugin = v46OrLater;
     props.supportsPluginsBlock = props.isFirstParty;
     props.supportsVendor = v46OrLater;
+    props.newWidgetConstructor = v410OrLater;
 
     var files = init.filesToCopy(props);
 

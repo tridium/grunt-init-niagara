@@ -1,7 +1,12 @@
+/* eslint-env node */
+
+'use strict';
+
 var argv = process.argv,
   multiProject = argv.indexOf('--multi') >= 0,
   versionIndex = process.argv.indexOf('--version'),
-  version = versionIndex >= 0 ? argv[versionIndex + 1] : '4.6';
+  version = versionIndex >= 0 ? argv[versionIndex + 1] : '4.6',
+  hasJsx = version >= '4.10';
 
 /**
  * Represents one question that may be answered during the grunt-init process.
@@ -104,7 +109,8 @@ Question.questions = {
   'form factor': new Question('form factor', { mini: 'agent', max: 'agent' }),
   'agent': new Question('agent', { 'baja:Component': 'class name', '': 'skeleton' }),
   'class name': new Question('class name', { 'com.testmodule.BTestWidget': 'skeleton' }),
-  'skeleton': new Question('skeleton', { y: 'version', n: 'version' }),
+  'skeleton': new Question('skeleton', hasJsx ? { y: 'version', n: 'jsx' } : { y: 'version', n: 'version' }),
+  'jsx': new Question('jsx', { y: 'version', n: 'version' }),
   'version': new Question('version', { '0.1.0': 'project homepage' }),
   'project homepage': new Question('project homepage', { 'http://me.com': 'issues tracker' }),
   'issues tracker': new Question('issues tracker', { 'http://me.com/issues': 'email' }),

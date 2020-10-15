@@ -55,7 +55,7 @@ moduleTestJar {
 
 {% if (hasGruntPlugin) {
    if (!supportsPluginsBlock) { %}apply plugin: "com.tridium.niagara-grunt"
-{% } %}gruntBuild { tasks 'requirejs' }
+{% } %}gruntBuild { tasks('babel:dist', 'copy:dist', 'requirejs') }
 {% } else { %}
 niagaraRjs {
   builds = [
@@ -185,7 +185,7 @@ tasks.named("moduleTestJar", Module) {
 }
 
 tasks.named("gruntBuild", GruntBuildTask) {
-  tasks('requirejs')
+  tasks('babel:dist', 'copy:dist', 'requirejs')
 }
 
 {% } %}

@@ -6,52 +6,52 @@
   if (!skeleton) {
 
 %}
-define(['baja!',
-        'jquery',
-        'Promise',
-        'nmodule/{%= name %}/rc/{%= widgetName %}',
-        'nmodule/js/rc/jasmine/promiseUtils'], function (
-        baja,
-        $,
-        Promise,
-        {%= widgetName %},
-        promiseUtils) {
+define([
+  'baja!',
+  'jquery',
+  'Promise',
+  'nmodule/js/rc/jasmine/promiseUtils',
+  'nmodule/{%= name %}/rc/{%= widgetName %}' ], function (
+  baja,
+  $,
+  Promise,
+  promiseUtils,
+  {%= widgetName %}) {
 
   'use strict';
 
-  var doPromise = promiseUtils.doPromise,
-      addCustomMatchers = promiseUtils.addCustomMatchers;
+  const { waitForTrue } = promiseUtils;
 
-  describe('nmodule/{%= name %}/rc/{%= widgetName %}', function () {
-    var stooges,
+  describe('nmodule/{%= name %}/rc/{%= widgetName %}', () => {
+    let stooges,
         widget,
         elem;
-        
+
     function addStoogesComponent() {
       return baja.Ord.make('station:|slot:').get({ lease: true })
-        .then(function (station) {
+        .then((station) => {
           return station.add({
-            slot: 'stooges',
+            slot: 'stooges?',
             value: baja.$('baja:Component', {
               moe: true, larry: true, curly: true
             })
           });
         })
-        .then(function () {
-          return baja.Ord.make('station:|slot:/stooges').get({ lease: true });
+        .then((prop) => {
+          return baja.Ord.make('station:|slot:/' + prop).get({ lease: true });
         })
-        .then(function (s) {
+        .then((s) => {
           stooges = s;
         });
     }
-    
+
     function removeStoogesComponent() {
       return baja.Ord.make('station:|slot:').get({ lease: true })
         .then(function (station) {
-          return station.remove({ slot: 'stooges' });
+          return station.remove({ slot: stooges.getName() });
         });
     }
-    
+
     function initializeWidget() {
       widget = new {%= widgetName %}();
       elem = $('<div/>');
@@ -59,33 +59,31 @@ define(['baja!',
       return widget.initialize(elem);
     }
 
-    beforeEach(function () {
+    beforeEach(() => {
       //for each spec, we want an initialized widget, and a mounted
       //component to work with.
-      //doPromise wraps the promise execution in jasmine runs/waitsFor calls
-      //to ensure it completes before continuing with the test.
-      doPromise(Promise.join(
+      //the use of promiseUtils in allSpecs.js gets us some custom matcher
+      //functions and the ability to simply return a Promise from
+      //beforeEach()/afterEach()/it() to do an async test.
+      return Promise.all([
         addStoogesComponent(),
         initializeWidget()
-      ));
- 
-      //addCustomMatchers gets us the toBeResolvedWith() matcher along with
-      //some others. see the JSDoc for js/rc/jasmine/promiseUtils for details.
-      addCustomMatchers(this);
+      ]){% if (jsx) { %}
+        .then(() => widget.load(stooges)){% } %};
     });
     
-    afterEach(function () {
+    afterEach(() => {
       //after each spec, we clean up after ourselves.
-      doPromise(removeStoogesComponent());
+      return removeStoogesComponent();
     });
 
-    describe('#doInitialize()', function () {
-      it('creates the structure to load buttons into', function () {
+    describe('#doInitialize()', () => {
+      it('creates the structure to load buttons into', () => {
         expect(elem.find('.{%= widgetName %}-header').length).toBe(1);
         expect(elem.find('.{%= widgetName %}-content').length).toBe(1);
       });
 
-      it('arms a handler to set active class on button click', function () {
+      it('arms a handler to set active class on button click', () => {
         var contentDom = elem.find('.{%= widgetName %}-content'),
             button = $('<button></button>');
 
@@ -93,11 +91,11 @@ define(['baja!',
         expect(button).toHaveClass('active');
       });
 
-      it("removes active class from other buttons when one is clicked", function () {
-        var contentDom = elem.find('.{%= widgetName %}-content'),
-            button1 = $('<button></button>').appendTo(contentDom),
-            button2 = $('<button></button>').appendTo(contentDom),
-            button3 = $('<button></button>').appendTo(contentDom);
+      it("removes active class from other buttons when one is clicked", () => {
+        const contentDom = elem.find('.{%= widgetName %}-content');
+        const button1 = $('<button></button>').appendTo(contentDom);
+        const button2 = $('<button></button>').appendTo(contentDom);
+        const button3 = $('<button></button>').appendTo(contentDom);
 
         button1.click();
         expect(button1).toHaveClass('active');
@@ -111,63 +109,54 @@ define(['baja!',
         expect(contentDom.find('button.active').length).toBe(1);
       });
 
-      it('arms a handler to display selected slot name', function () {
-        var slotDom = elem.find('.{%= widgetName %}-selected-slot');
+      it('arms a handler to display selected slot name', () => {
+        const slotDom = elem.find('.{%= widgetName %}-selected-slot');
+        const contentDom = elem.find('.{%= widgetName %}-content');
+        const button = contentDom.find('[data-slot=larry]');
+        button.click();
 
-        runs(function () {
-          var contentDom = elem.find('.{%= widgetName %}-content'),
-              button = $('<button class="{%= widgetName %}-button" data-slot="curlyJoe"></button>');
-
-          button.appendTo(contentDom);
-          button.click();
-        });
-
-        waitsFor(function () {
-          return slotDom.text();
-        }, 100, 'slot name to be displayed');
-
-        runs(function () {
-          expect(slotDom.text()).toBe('curlyJoe');
-        });
+        return waitForTrue(() => slotDom.text() === 'larry');
       });
     });
 
-    describe('#doLoad()', function () {
-      beforeEach(function () {
-        doPromise(widget.load(stooges));
+    describe('#doLoad()', () => {
+      {% if (!jsx) { %}beforeEach(() => {
+        return widget.load(stooges);
       });
 
-      it('creates a button for each slot', function () {
-        var slots = stooges.getSlots().toArray(),
-            buttons = elem.find('button');
+        {% } %}it('creates a button for each slot', () => {
+        const slots = stooges.getSlots().toArray();
+        const buttons = elem.find('button');
 
         expect(buttons.length).toBe(slots.length);
-        buttons.each(function (i, elem) {
+        buttons.each((i, elem) => {
           expect($(elem).data('slot')).toBe(slots[i].getName());
         });
       });
 
-      it("updates buttons when component adds slots", function () {
-        doPromise(stooges.add({ slot: 'shemp', value: true })
-          .then(function () {
-            var buttons = elem.find('button');
-            expect(buttons.eq(3).data('slot')).toBe('shemp');
-          }));
+      it("updates buttons when component adds slots", () => {
+        return stooges.add({ slot: 'shemp', value: true })
+          .then(() => {
+            return waitForTrue(() => {
+              const buttons = elem.find('button');
+              return buttons.eq(3).data('slot') === 'shemp';
+            });
+          });
       });
     });
 
-    describe('#doRead()', function () {
-      beforeEach(function () {
-        doPromise(widget.load(stooges));
+    describe('#getSelectedSlotName()', () => {
+      beforeEach(() => {
+        return widget.load(stooges);
       });
 
-      it('returns the value of the currently active button', function () {
+      it('returns the value of the currently active button', () => {
         elem.find('button:contains(curly)').addClass('active');
-        expect(widget.read()).toBeResolvedWith('curly');
+        expect(widget.getSelectedSlotName()).toBe('curly');
       });
 
-      it('returns undefined if no button selected', function () {
-        expect(widget.read()).toBeResolvedWith(undefined);
+      it('returns undefined if no button selected', () => {
+        expect(widget.getSelectedSlotName()).toBe(undefined);
       });
     });
   });
@@ -185,61 +174,57 @@ define(['baja!',
 
 %}
 define(['nmodule/{%= name %}/rc/{%= widgetName %}',
-        'nmodule/js/rc/jasmine/promiseUtils',
         'jquery'], function (
          {%= widgetName %},
-         promiseUtils,
          $) {
 
   'use strict';
 
-  var doPromise = promiseUtils.doPromise;
-
-  describe('nmodule/{%= name %}/rc/{%= widgetName %}', function () {
+  describe('nmodule/{%= name %}/rc/{%= widgetName %}', () => {
     var widget,
         elem;
 
-    beforeEach(function () {
+    beforeEach(() => {
       widget = new {%= widgetName %}();
       elem = $('<div/>');
     });
 
-    describe('#doInitialize()', function () {
-      it('does something', function () {
-        doPromise(widget.initialize(elem)
-          .then(function () {
+    describe('#doInitialize()', () => {
+      it('does something', () => {
+        return widget.initialize(elem)
+          .then(() => {
             //assert something about the widget after initialization.
             //expect(widget.js().text()).toBe('ready to go');
-          }));
+          });
       });
     });
 
-    describe('#doLoad()', function () {
-      it('does something', function () {
-        doPromise(widget.initialize(elem)
-          .then(function () {
+    describe('#doLoad()', () => {
+      it('does something', () => {
+        return widget.initialize(elem)
+          .then(() => {
             return widget.load('something');
           })
-          .then(function () {
+          .then(() => {
             //assert something about the widget after value is loaded.
             //expect(widget.jq().find('input').val()).toBe('something good'):
-          }));
+          });
       });
     });
 
-    describe('#doRead()', function () {
-      it('does something', function () {
-        doPromise(widget.initialize(elem)
-          .then(function () {
+    describe('#doRead()', () => {
+      it('does something', () => {
+        return widget.initialize(elem)
+          .then(() => {
             return widget.load('something good');
           })
-          .then(function () {
+          .then(() => {
             return widget.read();
           })
           .then(function (result) {
             //assert something about the result read from the widget.
             //expect(result).toBe('something {%= superlative() %}');
-          }));
+          });
       });
     });
   });

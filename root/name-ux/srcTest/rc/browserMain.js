@@ -1,4 +1,4 @@
-/*jshint devel: true */
+/* eslint-env browser */
 /*global testGlobals */
 
 (function () {
@@ -21,9 +21,9 @@
       lex: '/module/js/rc/lex/lexplugin',{% if (hasLogJs) { %}
       log: '/module/js/rc/log/logPlugin',{% } %}
       nmodule: '/module',
-      'nmodule/{%= name %}': 'src',
-      'nmodule/{%= name %}Test': 'srcTest',
-      Promise: '/module/js/rc/bluebird/bluebird',
+      'nmodule/{%= name %}': 'build/karma/src',
+      'nmodule/{%= name %}Test': 'build/karma/srcTest',
+      Promise: '/module/js/rc/bluebird/bluebird.min',
       'niagara-test-server': '/niagara-test-server',
       underscore: '/module/js/rc/underscore/underscore'
     }
@@ -35,8 +35,8 @@
     }
   }
 
-  require(['niagara-test-server/karmaUtils',
-           'niagara-test-server/globals'], function (karmaUtils) {
+  require([ 'niagara-test-server/karmaUtils',
+           'niagara-test-server/globals' ], function (karmaUtils) {
 
     /*
      * if your test suite grows very large, you can change which specs
@@ -49,7 +49,7 @@
     karmaUtils.setupAndRunSpecs({
       user: 'admin',
       pass: 'asdf1234',
-      specs: ['nmodule/{%= name %}Test/rc/spec/allSpecs']
+      specs: [ 'nmodule/{%= name %}Test/rc/spec/allSpecs' ]
     }, function (err) {
       if (err) { console.error(err); }
     });
