@@ -2,11 +2,13 @@
 
 "use strict";
 
-var loadTasksRelative = require('grunt-niagara/lib/loadTasksRelative');
+const loadTasksRelative = require('grunt-niagara/lib/loadTasksRelative');
 
 const SRC_FILES = [
   'src/rc/**/*.js',
-  'Gruntfile.js'
+  'Gruntfile.js',
+  '!**/*.built.js',
+  '!**/*.built.min.js'
 ];
 const TEST_FILES = [
   'srcTest/rc/**/*.js'

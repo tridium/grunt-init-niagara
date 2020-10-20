@@ -50,12 +50,11 @@ module.exports.testAllPaths = function testAllPaths(cb) {
  * Run the grunt-init process for the given module name and feed it the given
  * array of answers to its questions.
  *
- * @param {String} moduleName
+ * @param {String} cwd
  * @param {Array.<String>} choices
  * @param {Function} cb
  */
-function doGruntInit(moduleName, choices, cb) {
-  var cwd = path.join(process.cwd(), moduleName);
+function doGruntInit(cwd, choices, cb) {
   var p = exec('grunt-init', [ 'grunt-init-niagara' ], cwd, cb);
 
   setTimeout(function writeChoice() {
@@ -89,19 +88,19 @@ function doGradlewBuild(moduleName, cb) {
  * @param {Function} cb
  */
 function testRun(moduleName, choices, cb) {
-  if (fs.existsSync(moduleName)) { deleteFolderRecursive(moduleName); }
-  fs.mkdirSync(moduleName);
-  doGruntInit(moduleName, choices.slice(), function (err) {
+  const moduleHome = path.join(niagara_dev_home, moduleName);
+  if (fs.existsSync(moduleHome)) { deleteFolderRecursive(moduleHome); }
+  fs.mkdirSync(moduleHome);
+  doGruntInit(moduleHome, choices.slice(), function (err) {
     if (err) { return cb(err); }
     doGradlewBuild(moduleName, function (err) {
       if (err) { return cb(err); }
-      gruntCi(moduleName, cb);
+      gruntCi(path.join(moduleHome, moduleName + '-ux'), cb);
     });
   });
 }
 
-function gruntCi(moduleName, cb) {
-  const cwd = path.join(process.cwd(), moduleName, moduleName + '-ux');
+function gruntCi(cwd, cb) {
 
   if (multiProject) {
     return exec('grunt', [ 'ci' ], cwd, cb);

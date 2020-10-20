@@ -1,7 +1,7 @@
 {%
 
 ////////////////////////////////////////////////////////////////
-// Non-skeleton, full-fat demo code (no JSX)
+// Non-skeleton, full-fat demo code (no JSX, no ES6 [no grunt in 4.4])
 ////////////////////////////////////////////////////////////////
 if (!skeleton) {
   if (!jsx) {
@@ -12,24 +12,25 @@ if (!skeleton) {
  *
  * @module nmodule/{%= name %}/rc/{%= widgetName %}
  */
-define(['{%= widgetModule %}',
-        'bajaux/mixin/subscriberMixIn',
-        'jquery',
-        'Promise',
-        'hbs!nmodule/{%= name %}/rc/template/{%= widgetName %}-structure',
-        'hbs!nmodule/{%= name %}/rc/template/{%= widgetName %}-content',
-        'css!nmodule/{%= name %}/rc/{%= name %}'], function (
-        {%= widgetClass %},
-        subscriberMixin,
-        $,
-        Promise,
-        tpl{%= widgetName %}Structure,
-        tpl{%= widgetName %}Content) {
+define([
+  '{%= widgetModule %}',
+  'bajaux/mixin/subscriberMixIn',
+  'jquery',
+  'Promise',
+  'hbs!nmodule/{%= name %}/rc/template/{%= widgetName %}-structure',
+  'hbs!nmodule/{%= name %}/rc/template/{%= widgetName %}-content',
+  'css!nmodule/{%= name %}/rc/{%= name %}' ], function (
+  {%= widgetClass %},
+  subscriberMixin,
+  $,
+  Promise,
+  tpl{%= widgetName %}Structure,
+  tpl{%= widgetName %}Content) {
 
   'use strict';
 
-  var SELECTED_CLASS = 'active',
-      BUTTON_CLASS = '{%= widgetName %}-button';
+  var SELECTED_CLASS = 'active';
+  var BUTTON_CLASS = '{%= widgetName %}-button';
 
   /**
    * A demonstration Widget. This builds a list of buttons from the slots of a
@@ -63,28 +64,23 @@ define(['{%= widgetModule %}',
       selectedSlotText: "You've selected slot: "
     }));
 
-    dom.on('click', '.{%= widgetName %}-content button', function () {
-      var $this = $(this);
-      $this.siblings().removeClass(SELECTED_CLASS);
-      $this.addClass(SELECTED_CLASS);
+    dom.on('click', '.{%= widgetName %}-content button', function (e) {
+      var target = $(e.target);
+      target.siblings().removeClass(SELECTED_CLASS);
+      target.addClass(SELECTED_CLASS);
       that.$updateSlotText();
       that.setModified(true);
     });
   };
 
-  /**
-   * Reads the currently selected slot and update the display accordingly.
-   * The display will be updated asynchronously.
-   *
-   * @private
-   * @returns {Promise}
-   */
+    /**
+     * Reads the currently selected slot and update the display accordingly.
+     *
+     * @private
+     */
   {%= widgetName %}.prototype.$updateSlotText = function () {
-    var that = this;
-
-    return that.read().then(function (slotName) {
-      that.jq().find('.{%= widgetName %}-selected-slot').text(slotName);
-    });
+    var slotName = this.getSelectedSlotName();
+    this.jq().find('.{%= widgetName %}-selected-slot').text(slotName);
   };
 
   /**
@@ -94,10 +90,8 @@ define(['{%= widgetModule %}',
    * @param {baja.Complex} value the value being loaded in
    */
   {%= widgetName %}.prototype.$buildButtons = function (value) {
-    var that = this,
-        dom = that.jq(),
-        contentDom = dom.find('.{%= widgetName %}-content'),
-        buttons = [];
+    var contentDom = this.jq().find('.{%= widgetName %}-content');
+    var buttons = [];
 
     value.getSlots().each(function (slot) {
       buttons.push({
@@ -110,7 +104,7 @@ define(['{%= widgetModule %}',
       buttons: buttons
     }));
 
-    that.$updateSlotText();
+    this.$updateSlotText();
   };
 
   /**
@@ -131,17 +125,13 @@ define(['{%= widgetModule %}',
   };
 
   /**
-   * Gets the currently selected slot
-   *
-   * @returns {Promise} promise to be resolved with the name of the currently
-   * selected slot
+   * @returns {string} the name of the currently selected slot
    */
-  {%= widgetName %}.prototype.doRead = function () {
+  {%= widgetName %}.prototype.getSelectedSlotName = function () {
     var selectedButton = this.jq().find(
-          '.{%= widgetName %}-content .' + BUTTON_CLASS + '.' + SELECTED_CLASS);
+      '.{%= widgetName %}-content .' + BUTTON_CLASS + '.' + SELECTED_CLASS);
 
-    //promises are optional - the slot could also be returned directly
-    return Promise.resolve(selectedButton.data('slot'));
+    return selectedButton.data('slot');
   };
 
   return {%= widgetName %};
@@ -234,10 +224,7 @@ define([
     }
 
     /**
-     * Gets the currently selected slot
-     *
-     * @returns {Promise} promise to be resolved with the name of the currently
-     * selected slot
+     * @returns {string} the name of the currently selected slot
      */
     getSelectedSlotName() {
       const selectedButton = this.jq().find(
@@ -248,10 +235,8 @@ define([
 
     /**
      * Reads the currently selected slot and update the display accordingly.
-     * The display will be updated asynchronously.
      *
      * @private
-     * @returns {Promise}
      */
     $updateSlotText() {
       const selectedSlot = this.getSelectedSlotName();
@@ -275,7 +260,7 @@ define([
  *
  * @module nmodule/{%= name %}/rc/{%= widgetName %}
  */
-define(['{%= widgetModule %}', 'jquery', 'Promise'], function ({%= widgetClass %}, $, Promise) {
+define([ '{%= widgetModule %}', 'jquery', 'Promise' ], function ({%= widgetClass %}, $, Promise) {
 
   'use strict';
 

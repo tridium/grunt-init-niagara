@@ -110,12 +110,15 @@ define([
       });
 
       it('arms a handler to display selected slot name', () => {
-        const slotDom = elem.find('.{%= widgetName %}-selected-slot');
-        const contentDom = elem.find('.{%= widgetName %}-content');
-        const button = contentDom.find('[data-slot=larry]');
-        button.click();
+        return widget.load(stooges)
+          .then(function () {
+            const slotDom = elem.find('.{%= widgetName %}-selected-slot');
+            const contentDom = elem.find('.{%= widgetName %}-content');
+            const button = contentDom.find('[data-slot=larry]');
+            button.click();
 
-        return waitForTrue(() => slotDom.text() === 'larry');
+            return waitForTrue(() => slotDom.text() === 'larry');
+          });
       });
     });
 
@@ -173,10 +176,11 @@ define([
 
 
 %}
-define(['nmodule/{%= name %}/rc/{%= widgetName %}',
-        'jquery'], function (
-         {%= widgetName %},
-         $) {
+define([
+  'nmodule/{%= name %}/rc/{%= widgetName %}',
+  'jquery' ], function (
+  {%= widgetName %},
+  $) {
 
   'use strict';
 

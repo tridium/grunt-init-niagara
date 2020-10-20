@@ -2,11 +2,13 @@
 
 'use strict';
 
-var argv = process.argv,
-  multiProject = argv.indexOf('--multi') >= 0,
-  versionIndex = process.argv.indexOf('--version'),
-  version = versionIndex >= 0 ? argv[versionIndex + 1] : '4.6',
-  hasJsx = version >= '4.10';
+const parseVersion = require('../parseVersion');
+const argv = process.argv;
+const multiProject = argv.indexOf('--multi') >= 0;
+const versionIndex = process.argv.indexOf('--version');
+const version = versionIndex >= 0 ? argv[versionIndex + 1] : '4.6';
+const r410OrGreater = parseVersion(version).compareTo('4.10') >= 0;
+const hasJsx = r410OrGreater;
 
 /**
  * Represents one question that may be answered during the grunt-init process.

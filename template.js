@@ -4,7 +4,8 @@
 
 /* eslint-env node */
 
-var path = require('path');
+const path = require('path');
+const parseVersion = require('./parseVersion');
 
 var superlatives = [
   'whimsical',
@@ -104,20 +105,6 @@ exports.template = function (grunt, init, done) {
         allPrompts.splice(++idx, 0, promptToInsert);
       }
     }
-  }
-
-  function parseVersion(versionStr) {
-    const [ match, major, minor ] = (/^(\d+)\.(\d+)$/.exec(versionStr.trim()) || [])
-      .map(n => parseInt(n, 10));
-
-    return match && {
-      major,
-      minor,
-      compareTo: version => {
-        const other = parseVersion(version);
-        return major === other.major ? minor - other.minor : major - other.major;
-      }
-    };
   }
   
 ////////////////////////////////////////////////////////////////
@@ -331,11 +318,11 @@ exports.template = function (grunt, init, done) {
     props.keywords = [];
     props.year = new Date().getFullYear();
     props.devDependencies = {
-      "grunt": "^1.3.0",
-      "grunt-niagara": "^2.0.0-alpha.14",
+      "grunt": "~1.0.1",
+      "grunt-niagara": "^2.0.0",
       "@babel/core": "^7.0.0",
       "@babel/preset-env": "^7.0.0",
-      "babel-plugin-istanbul": "^6.0.0"
+      "babel-plugin-istanbul": "^4.1.3"
     };
 
     if (props.jsx) {
@@ -371,7 +358,7 @@ exports.template = function (grunt, init, done) {
     props.widgetName = props.widgetName === undefined ? 'NotAWidget' : props.widgetName;
 
     props.jqueryVersion = v49OrLater ? '3.4.1' : '3.2.0';
-    props.handlebarsFilename = v49OrLater ? 'handlebars' : v44OrLater ? 'handlebars-v4.0.6' : 'handlebars-v2.0.0';
+    props.handlebarsFilename = v49OrLater ? 'handlebars' : 'handlebars-v4.0.6';
     props.hasLogJs = v46OrLater;
     props.hasGruntPlugin = v46OrLater;
     props.supportsPluginsBlock = props.isFirstParty;
