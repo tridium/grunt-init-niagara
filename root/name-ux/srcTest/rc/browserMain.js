@@ -17,7 +17,7 @@
       css: '/module/js/com/tridium/js/ext/require/css',
       Handlebars: '/module/js/rc/handlebars/{%= handlebarsFilename %}',
       hbs: '/module/js/rc/require-handlebars-plugin/hbs.built.min',
-      jquery: '/module/js/rc/jquery/jquery-{%= jqueryVersion %}.min',
+      jquery: '/module/js/rc/jquery/jquery{%= jqueryVersion %}.min',
       lex: '/module/js/rc/lex/lexplugin',{% if (hasLogJs) { %}
       log: '/module/js/rc/log/logPlugin',{% } %}
       nmodule: '/module',
@@ -26,7 +26,17 @@
       Promise: '/module/js/rc/bluebird/bluebird.min',
       'niagara-test-server': '/niagara-test-server',
       underscore: '/module/js/rc/underscore/underscore'
-    }
+    }{% if (addJqueryShim) { %},
+    // This map config may be removed if all code is compatible with jQuery 3.5 strict mode.
+    // For more details, visit https://jquery.com/upgrade-guide/3.5/. 
+    map: {
+      '*': {
+        'jquery': 'nmodule/js/rc/shims/jquery/jquery'
+      },
+      'nmodule/js/rc/shims/jquery/jquery': {
+        'jquery': 'jquery'
+      }
+    } {% } %}
   });
   
   function testOnly(regex) {

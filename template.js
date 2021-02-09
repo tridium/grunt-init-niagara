@@ -312,7 +312,8 @@ exports.template = function (grunt, init, done) {
     const targetVersion = parseVersion(props.targetVersion),
       v46OrLater = targetVersion.compareTo('4.6') >= 0,
       v49OrLater = targetVersion.compareTo('4.9') >= 0,
-      v410OrLater = targetVersion.compareTo('4.10') >= 0;
+      v410OrLater = targetVersion.compareTo('4.10') >= 0,
+      v411OrLater = targetVersion.compareTo('4.11') >= 0;
 
     //fix/tweak our properties (to be used by templates)
     props.keywords = [];
@@ -357,13 +358,14 @@ exports.template = function (grunt, init, done) {
     props.jsBuildName = capitalizeFirstLetter(props.moduleName) + 'JsBuild';
     props.widgetName = props.widgetName === undefined ? 'NotAWidget' : props.widgetName;
 
-    props.jqueryVersion = v49OrLater ? '3.4.1' : '3.2.0';
+    props.jqueryVersion = v411OrLater ? '' : (v49OrLater ? '-3.4.1' : '-3.2.0');
     props.handlebarsFilename = v49OrLater ? 'handlebars' : 'handlebars-v4.0.6';
     props.hasLogJs = v46OrLater;
     props.hasGruntPlugin = v46OrLater;
     props.supportsPluginsBlock = props.isFirstParty;
     props.supportsVendor = v46OrLater;
     props.newWidgetConstructor = v410OrLater;
+    props.addJqueryShim = v411OrLater;
 
     var files = init.filesToCopy(props);
 
