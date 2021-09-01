@@ -14,7 +14,7 @@ const TEST_FILES = [
   'srcTest/rc/**/*.js'
 ];
 const JS_FILES = SRC_FILES.concat(TEST_FILES);
-const ALL_FILES = JS_FILES.concat('src/rc/**/*.css');
+const ALL_FILES = JS_FILES.concat('src/rc/**/*.{% if (less) { %}less{% } else {%}css{%} %}');
 
 module.exports = function runGrunt(grunt) {
 
@@ -42,8 +42,27 @@ module.exports = function runGrunt(grunt) {
       }{% } %}
     },
     watch: {
-      src: ALL_FILES
-    },
+      src: ALL_FILES{% if (less) { %},
+      tasks: (tasks) => [ 'less' ].concat(tasks)
+      {% } %}
+    },{% if (less) { %}
+    less: {
+      options: {
+        banner: '/* @noSnoop */',
+        sourceMap: true,
+        sourceMapBasepath: 'src',
+        sourceMapRootpath: '/module/{%= name %}/'
+      },
+      {%= name %}: {
+        options: {
+          sourceMapFilename: 'build/src/maps/{%= name %}.map',
+          sourceMapURL: '/module/{%= name %}/maps/{%= name %}.map'
+        },
+        files: {
+          'build/src/rc/{%= name %}.css': 'src/rc/{%= name %}.less'
+        }
+      }
+    },{% } %}
     karma: {},
     requirejs: {},
     niagara: {
@@ -55,5 +74,7 @@ module.exports = function runGrunt(grunt) {
     }
   });
 
-  loadTasksRelative(grunt, 'grunt-niagara');
+  loadTasksRelative(grunt, 'grunt-niagara');{% if (less) { %}
+  loadTasksRelative(grunt, 'grunt-contrib-less');
+    {% } %}
 };

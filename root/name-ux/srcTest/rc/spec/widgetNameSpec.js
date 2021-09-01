@@ -117,7 +117,7 @@ define([
             const button = contentDom.find('[data-slot=larry]');
             button.click();
 
-            return waitForTrue(() => slotDom.text() === 'larry');
+            return waitForTrue(() => slotDom.text() === 'larry', 'slot name to match the expected name');
           });
       });
     });

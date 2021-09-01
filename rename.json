@@ -7,6 +7,7 @@
   "name-ux/src/com/authorname/name/ClassName.java": "{%= name %}-ux/src/{%= fullClassName.replace(/\\./g, '/') %}.java",
   "name-ux/src/com/authorname/name/ModuleJsBuild.java": "{%= name %}-ux/src/{%= package.replace(/\\./g, '/') %}/B{%= jsBuildName %}.java",
   "name-ux/src/rc/name.css": "{%= name %}-ux/src/rc/{%= name %}.css",
+  "name-ux/src/rc/name.less": "{%= name %}-ux/src/rc/{%= name %}.less",
   "name-ux/src/rc/name.js": "{%= name %}-ux/src/rc/{%= name %}.js",
   "name-ux/src/rc/name.htm": "{%= name %}-ux/src/rc/{%= name %}.htm",
   "name-ux/src/rc/name.min.htm": "{%= name %}-ux/src/rc/{%= name %}.min.htm",

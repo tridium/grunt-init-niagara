@@ -7,7 +7,7 @@ if (gradleVersion === '4') { %}/*
  */
  
 {% if (supportsPluginsBlock) { %}plugins {
-  id "com.tridium.niagara-module"
+  id "{%= coreModulePlugin %}"
   id "com.tridium.niagara-grunt"
 }{% } %}
 {% if (isThirdParty) { %}version = "{%= version %}"
@@ -55,7 +55,7 @@ moduleTestJar {
 
 {% if (hasGruntPlugin) {
    if (!supportsPluginsBlock) { %}apply plugin: "com.tridium.niagara-grunt"
-{% } %}gruntBuild { tasks('babel:dist', 'copy:dist', 'requirejs') }
+{% } %}gruntBuild { tasks('babel:dist',{% if(less) {%} 'less',{%} %} 'copy:dist', 'requirejs') }
 {% } else { %}
 niagaraRjs {
   builds = [
@@ -145,7 +145,7 @@ import com.tridium.gradle.plugins.module.task.Module
 import com.tridium.gradle.plugins.grunt.task.GruntBuildTask
 
 plugins {
-  id "com.tridium.niagara-module"
+  id "{%= coreModulePlugin %}"
   id "com.tridium.bajadoc"
   id "com.tridium.niagara-grunt"
 }
@@ -185,7 +185,7 @@ tasks.named("moduleTestJar", Module) {
 }
 
 tasks.named("gruntBuild", GruntBuildTask) {
-  tasks('babel:dist', 'copy:dist', 'requirejs')
+  tasks('babel:dist',{% if(less) {%} 'less',{%} %} 'copy:dist', 'requirejs')
 }
 
 {% } %}

@@ -192,7 +192,7 @@ exports.template = function (grunt, init, done) {
   const targetNiagaraVersionPrompt = {
     message: 'What Niagara version will you build your module against?',
     name: 'targetVersion',
-    default: '4.4',
+    default: '4.10',
     validator: (value, done) => {
       currentNiagaraVersion = parseVersion(value);
       done(!!currentNiagaraVersion);
@@ -244,7 +244,7 @@ exports.template = function (grunt, init, done) {
       if (value.toLowerCase() === 'y') {
         //we're creating a bajaux widget. prompt for a couple more bajaux things
         insertPromptsAfter('bajaux', widgetNamePrompt, formFactorPrompt,
-          registerAgentPrompt, skeletonPrompt);
+          registerAgentPrompt, skeletonPrompt, lessPrompt);
       }
       done();
     }
@@ -258,6 +258,15 @@ exports.template = function (grunt, init, done) {
       'creating your Widgets. These APIs are in _Development_ status. They are ' +
       'Niagara-specific and they are not the same thing as React. See the ' +
       'bajaux documentation for full details.'
+  };
+
+  const lessPrompt = {
+    message: 'Would you like to use LESS to generate CSS?',
+    name: 'less',
+    default: 'y/N',
+    warning: 'LESS is a style sheet language that can be compiled to CSS. Variables and ' +
+      'mixins are some of the powerful features that make LESS more dynamic. More information ' +
+      'about LESS and its features can be found here \'https://lesscss.org/\'.'
   };
 
   const authorPrompt = {
@@ -299,9 +308,18 @@ exports.template = function (grunt, init, done) {
       return file.match('.java') || file.match('module-include.xml');
     }
 
+    function isLessFile(file) {
+      return file.match(props.name + '.less');
+    }
+
+    function isCssFile(file) {
+      return file.match(props.name + '.css');
+    }
+
     function isNonSkeleton(file) {
       return file.match('.htm') ||
         file.match('.css') ||
+        file.match('.less') ||
         file.match(props.name + '\\.js$') ||
         file.match(props.name + 'Spec\\.js$') ||
         file.match('.hbs');
@@ -333,6 +351,10 @@ exports.template = function (grunt, init, done) {
       props.jsx = false;
     }
 
+    if(props.less) {
+      props.devDependencies['grunt-contrib-less'] = '^2.0.0';
+    }
+
     props.isFirstParty = props.author_name.toLowerCase() === 'tridium';
     props.isThirdParty = !props.isFirstParty;
     props.gradleVersion = props.isThirdParty ? '4' : '5';
@@ -353,6 +375,7 @@ exports.template = function (grunt, init, done) {
     props.package = split.join('.');
     props.superlative = superlative;
     props.bajaux = String(props.bajaux).toLowerCase() === 'y';
+    props.less = String(props.less).toLowerCase() === 'y';
     props.skeleton = !props.bajaux || String(props.skeleton).toLowerCase() === 'y';
     props.moduleName = niagaraModuleName;
     props.jsBuildName = capitalizeFirstLetter(props.moduleName) + 'JsBuild';
@@ -365,9 +388,20 @@ exports.template = function (grunt, init, done) {
     props.supportsPluginsBlock = props.isFirstParty;
     props.supportsVendor = v46OrLater;
     props.newWidgetConstructor = v410OrLater;
+    props.coreModulePlugin = props.isFirstParty && v49OrLater ? 'com.tridium.convention.core-module' : 'com.tridium.niagara-module';
     props.addJqueryShim = v411OrLater;
 
     var files = init.filesToCopy(props);
+
+    if(props.less) {
+      filterOutProps(files, function (file) {
+        return isCssFile(file);
+      });
+    } else {
+      filterOutProps(files, function (file) {
+        return isLessFile(file);
+      });
+    }
 
     if (!props.bajaux) {
       //we're not making a bajaux widget, so don't copy any bajaux-specific files.

@@ -57,7 +57,7 @@ Question.prototype.enumerateAllPaths = function enumerateAllPaths(allPaths, stac
       choices = that.choices() || [];
 
   choices.forEach(function (choice) {
-    stack.push(choice);
+    stack.push({ name: that.name, value: choice, toString: () => choice });
     var next = that.next(choice);
     if (next) {
       next.enumerateAllPaths(allPaths, stack);
@@ -111,13 +111,14 @@ Question.questions = {
   'form factor': new Question('form factor', { mini: 'agent', max: 'agent' }),
   'agent': new Question('agent', { 'baja:Component': 'class name', '': 'skeleton' }),
   'class name': new Question('class name', { 'com.testmodule.BTestWidget': 'skeleton' }),
-  'skeleton': new Question('skeleton', hasJsx ? { y: 'version', n: 'jsx' } : { y: 'version', n: 'version' }),
-  'jsx': new Question('jsx', { y: 'version', n: 'version' }),
+  'skeleton': new Question('skeleton', { y: 'less', n: hasJsx ? 'jsx' : 'less' }),
+  'jsx': new Question('jsx', { y: 'less', n: 'less' }),
+  'less': new Question('less', { y: 'version', n: 'version' }),
   'version': new Question('version', { '0.1.0': 'project homepage' }),
   'project homepage': new Question('project homepage', { 'http://me.com': 'issues tracker' }),
   'issues tracker': new Question('issues tracker', { 'http://me.com/issues': 'email' }),
   'email': new Question('email', { 'me@me.com': 'node versions' }),
-  'node versions': new Question('node versions', { '>= 0.8.0': 'test command' }),
+  'node versions': new Question('node versions', { '>= 6.4.0': 'test command' }),
   'test command': new Question('test command', { 'grunt ci': null })
 };
 

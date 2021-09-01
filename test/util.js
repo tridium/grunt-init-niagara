@@ -8,7 +8,9 @@ const fs = require('fs'),
   path = require('path'),
   Question = require('./Question'),
   multiProject = process.argv.indexOf('--multi') >= 0,
-  niagara_dev_home = process.env.niagara_dev_home || '.';
+  niagara_dev_home = process.env.niagara_dev_home || '.',
+  moduleDirIndex = process.argv.indexOf('--moduleDir'),
+  moduleDir = moduleDirIndex >= 0 ? process.argv[moduleDirIndex + 1] : niagara_dev_home;
 
 if (multiProject && !niagara_dev_home) {
   throw new Error('niagara_dev_home environment variable not set');
@@ -62,8 +64,9 @@ function doGruntInit(cwd, choices, cb) {
       return p.stdin.write('N\n'); //done, no changes to my choices please
     }
     var choice = choices.shift();
-    p.stdin.write(choice + '\n');
-    setTimeout(writeChoice, 100);
+    p.stdin.write(choice.value + '\n');
+    console.log('choice: ' + choice.name + ' value: ' + choice.value);
+    setTimeout(writeChoice, 200);
   }, 1000);
 }
 
@@ -77,7 +80,7 @@ function doGradlewBuild(moduleName, cb) {
   var cwd = niagara_dev_home,
       buildCmd = ':' + moduleName + '-ux:build';
   // disable daemon, since we're wiping out the directory in between
-  exec('gradlew', [ buildCmd, '-a', '--no-daemon' ], cwd, cb);
+  exec('gradlew', [ buildCmd, '-a', '--no-daemon', '--rerun-tasks' ], cwd, cb);
 }
 
 /**
@@ -88,7 +91,7 @@ function doGradlewBuild(moduleName, cb) {
  * @param {Function} cb
  */
 function testRun(moduleName, choices, cb) {
-  const moduleHome = path.join(niagara_dev_home, moduleName);
+  const moduleHome = path.join(moduleDir, moduleName);
   if (fs.existsSync(moduleHome)) { deleteFolderRecursive(moduleHome); }
   fs.mkdirSync(moduleHome);
   doGruntInit(moduleHome, choices.slice(), function (err) {
