@@ -338,7 +338,7 @@ exports.template = function (grunt, init, done) {
     props.year = new Date().getFullYear();
     props.devDependencies = {
       "grunt": "~1.0.1",
-      "grunt-niagara": "^2.0.0",
+      "grunt-niagara": "^2.1.0",
       "@babel/core": "^7.0.0",
       "@babel/preset-env": "^7.0.0",
       "babel-plugin-istanbul": "^4.1.3"
@@ -351,7 +351,7 @@ exports.template = function (grunt, init, done) {
       props.jsx = false;
     }
 
-    if(props.less) {
+    if (props.less) {
       props.devDependencies['grunt-contrib-less'] = '^2.0.0';
     }
 
@@ -393,7 +393,7 @@ exports.template = function (grunt, init, done) {
 
     var files = init.filesToCopy(props);
 
-    if(props.less) {
+    if (props.less) {
       filterOutProps(files, function (file) {
         return isCssFile(file);
       });
