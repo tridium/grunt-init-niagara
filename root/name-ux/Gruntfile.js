@@ -59,7 +59,8 @@ module.exports = function runGrunt(grunt) {
           sourceMapURL: '/module/{%= name %}/maps/{%= name %}.map'
         },
         files: {
-          'build/src/rc/{%= name %}.css': 'src/rc/{%= name %}.less'
+          'build/src/rc/{%= name %}.css': 'src/rc/{%= name %}.less',
+          'build/karma/src/rc/{%= name %}.css': 'src/rc/{%= name %}.less'
         }
       }
     },{% } %}
