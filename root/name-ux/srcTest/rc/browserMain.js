@@ -19,7 +19,8 @@
       hbs: '/module/js/rc/require-handlebars-plugin/hbs.built.min',
       jquery: '/module/js/rc/jquery/jquery{%= jqueryVersion %}.min',
       lex: '/module/js/rc/lex/lexplugin',{% if (hasLogJs) { %}
-      log: '/module/js/rc/log/logPlugin',{% } %}
+      log: '/module/js/rc/log/logPlugin',{% } if (addMoment) { %}
+      moment: '/module/js/rc/shims/moment/moment',{% } %}
       nmodule: '/module',
       'nmodule/{%= name %}': 'build/karma/src',
       'nmodule/{%= name %}Test': 'build/karma/srcTest',
@@ -38,6 +39,9 @@
       }
     } {% } %}
   });
+
+  // ensure builtfile is not downloaded during tests
+  define('nmodule/{%= name %}/rc/{%= name %}.built.min');
   
   function testOnly(regex) {
     if (regex) {

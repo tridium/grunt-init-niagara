@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bajaObjectGraph version="4.0" reversibleEncodingKeySource="none" reversibleEncodingValidator="[null.1]=" >
+<p h="1" c="1" m="b=baja" t="b:Station">
+ <p n="Services" h="2" t="b:ServiceContainer">
+  <!-- /Services/UserService -->
+  <p n="UserService" h="3" c="2" t="b:UserService">
+   <p n="guest" f="rh" h="5" t="b:User">
+    <p n="fullName" f="r"/>
+    <p n="enabled" f="r" t="b:Boolean" v="false"/>
+    <p n="expiration" f="r"/>
+    <p n="permissions" f="r"/>
+    <p n="language" f="r"/>
+    <p n="email" f="ro"/>
+    <p n="authenticator" h="137" t="b:PasswordAuthenticator">
+     <p n="passwordConfig" h="138" t="b:UserPasswordConfiguration">
+     </p>
+    </p>
+    <p n="facets" f="ro"/>
+    <p n="navFile" f="r"/>
+    <p n="prototypeName" f="r"/>
+    <p n="networkUser" f="r"/>
+    <p n="version" v="node:1371672672576"/>
+    <p n="cellPhoneNumber" f="ro"/>
+    <p n="password" f="ro" t="b:Password" v="[pbkdf2-sha256.1]=89432383034d6feba726f20ea5de910f:4096:c99a60c9de2e27616d08337c673ee8ce6ed4e2437fc07fea49c482350f9f4006"/>
+    <!-- /Services/UserService/guest/authenticationScheme -->
+    <p n="authenticationScheme" h="12d" t="b:DigestAuthenticationScheme">
+     <p n="globalPasswordConfiguration" h="139" t="b:GlobalPasswordConfiguration">
+     </p>
+    </p>
+    <!-- /Services/UserService/guest/web_WebProfileConfig -->
+    <p n="web_WebProfileConfig" h="41" m="w=web" t="w:WebProfileConfig">
+     <p n="typeSpec" t="b:TypeSpec" v="workbench:DefaultWbWebProfile"/>
+    </p>
+    <!-- /Services/UserService/guest/baja_UserPasswordConfiguration -->
+    <p n="baja_UserPasswordConfiguration" h="42" t="b:UserPasswordConfiguration">
+    </p>
+    <!-- /Services/UserService/guest/web_MobileWebProfileConfig -->
+    <p n="web_MobileWebProfileConfig" h="47" t="w:MobileWebProfileConfig">
+     <p n="typeSpec" t="b:TypeSpec" v="hx:DefaultHxProfile"/>
+    </p>
+   </p>
+   <p n="userPrototypes" h="6" t="b:UserPrototypes">
+    <p n="defaultPrototype" h="7" t="b:User">
+     <p n="permissions" f="1"/>
+     <p n="authenticator" h="13a" t="b:PasswordAuthenticator">
+      <p n="passwordConfig" h="13b" t="b:UserPasswordConfiguration">
+      </p>
+     </p>
+     <p n="navFile" f="1"/>
+     <p n="version" v="node:1371672672429"/>
+     <!-- /Services/UserService/userPrototypes/defaultPrototype/authenticationScheme -->
+     <p n="authenticationScheme" h="12f" t="b:DigestAuthenticationScheme">
+      <p n="globalPasswordConfiguration" h="13c" t="b:GlobalPasswordConfiguration">
+      </p>
+     </p>
+     <!-- /Services/UserService/userPrototypes/defaultPrototype/web_WebProfileConfig -->
+     <p n="web_WebProfileConfig" h="3f" t="w:WebProfileConfig">
+      <p n="typeSpec" t="b:TypeSpec" v="workbench:DefaultWbWebProfile"/>
+     </p>
+     <!-- /Services/UserService/userPrototypes/defaultPrototype/baja_UserPasswordConfiguration -->
+     <p n="baja_UserPasswordConfiguration" h="40" t="b:UserPasswordConfiguration">
+     </p>
+     <!-- /Services/UserService/userPrototypes/defaultPrototype/web_MobileWebProfileConfig -->
+     <p n="web_MobileWebProfileConfig" h="46" t="w:MobileWebProfileConfig">
+      <p n="typeSpec" t="b:TypeSpec" v="hx:DefaultHxProfile"/>
+     </p>
+    </p>
+   </p>
+   <!-- /Services/UserService/admin -->
+   <p n="admin" h="4" t="b:User">
+    <p n="expiration" f="r"/>
+    <p n="permissions" f="r"/>
+    <p n="authenticator" h="13d" t="b:PasswordAuthenticator">
+     <p n="password" t="b:Password" v="[pbkdf2-sha256.1]=8d2e2b4e29e52a4cf36b89ecc1cabfb7:4096:e8ddc138e177e579a7432a85f0b6b8e61be2cb6b494f505befd39e93763d878d"/>
+     <p n="passwordConfig" h="13e" t="b:UserPasswordConfiguration">
+     </p>
+    </p>
+    <p n="version" v="node:1371672672576"/>
+    <p n="roles" v="admin"/>
+    <p n="password" t="b:Password" v="[pbkdf2-sha256.1]=7ac25e3d955bada439491f27c4849e50:4096:f595798bfaad36d662dcbc60463abf42015a4b3abd8371ec924ed1646032c31c"/>
+    <!-- /Services/UserService/admin/web_WebProfileConfig -->
+    <p n="web_WebProfileConfig" h="43" t="w:WebProfileConfig">
+     <p n="typeSpec" t="b:TypeSpec" v="hx:HTML5HxProfile"/>
+     <p n="selectedHxTheme" f="r" t="b:DynamicEnum" v="1@{Lucid=0,Zebra=1}"/>
+     <p n="hxWbViews" f="r" x="trueText=s:$25lexicon$28bajaui$3adialog$2eyes$29$25|falseText=s:$25lexicon$28bajaui$3adialog$2eno$29$25" t="b:Boolean" v="true"/>
+     <p n="navTreeSideBar" f="r" x="trueText=s:$25lexicon$28bajaui$3adialog$2eyes$29$25|falseText=s:$25lexicon$28bajaui$3adialog$2eno$29$25" t="b:Boolean" v="true"/>
+     <p n="searchSideBar" f="r" x="trueText=s:$25lexicon$28bajaui$3adialog$2eyes$29$25|falseText=s:$25lexicon$28bajaui$3adialog$2eno$29$25" t="b:Boolean" v="true"/>
+     <p n="paletteSideBar" f="r" x="trueText=s:$25lexicon$28bajaui$3adialog$2eyes$29$25|falseText=s:$25lexicon$28bajaui$3adialog$2eno$29$25" t="b:Boolean" v="true"/>
+     <p n="navFileTree" f="r" x="trueText=s:$25lexicon$28bajaui$3adialog$2eyes$29$25|falseText=s:$25lexicon$28bajaui$3adialog$2eno$29$25" t="b:Boolean" v="true"/>
+     <p n="configTree" f="r" x="trueText=s:$25lexicon$28bajaui$3adialog$2eyes$29$25|falseText=s:$25lexicon$28bajaui$3adialog$2eno$29$25" t="b:Boolean" v="true"/>
+     <p n="filesTree" f="r" x="trueText=s:$25lexicon$28bajaui$3adialog$2eyes$29$25|falseText=s:$25lexicon$28bajaui$3adialog$2eno$29$25" t="b:Boolean" v="true"/>
+     <p n="historiesTree" f="r" x="trueText=s:$25lexicon$28bajaui$3adialog$2eyes$29$25|falseText=s:$25lexicon$28bajaui$3adialog$2eno$29$25" t="b:Boolean" v="true"/>
+     <p n="hierarchiesTree" f="r" x="trueText=s:$25lexicon$28bajaui$3adialog$2eyes$29$25|falseText=s:$25lexicon$28bajaui$3adialog$2eno$29$25" t="b:Boolean" v="true"/>
+     <p n="moduleDependenciesFacets" f="rh" t="b:Facets" v="stationModuleDependencies=s:hx$3bthemeZebra"/>
+    </p>
+    <!-- /Services/UserService/admin/baja_UserPasswordConfiguration -->
+    <p n="baja_UserPasswordConfiguration" h="44" t="b:UserPasswordConfiguration">
+    </p>
+    <!-- /Services/UserService/admin/web_MobileWebProfileConfig -->
+    <p n="web_MobileWebProfileConfig" h="48" t="w:MobileWebProfileConfig">
+     <p n="typeSpec" t="b:TypeSpec" v="hx:DefaultHxProfile"/>
+    </p>
+   </p>
+  </p>
+  <!-- /Services/CategoryService -->
+  <p n="CategoryService" h="8" c="2" t="b:CategoryService">
+   <p n="ordMap" t="b:OrdToCategoryMap" v="file:^nav=3&#xa;file:^px=3&#xa;file:^=2"/>
+   <!-- /Services/CategoryService/User -->
+   <p n="User" h="9" t="b:Category">
+    <p n="index" v="1"/>
+   </p>
+   <!-- /Services/CategoryService/Admin -->
+   <p n="Admin" h="a" t="b:Category">
+    <p n="index" v="2"/>
+   </p>
+  </p>
+  <!-- /Services/JobService -->
+  <p n="JobService" h="b" t="b:JobService">
+  </p>
+  <!-- /Services/AlarmService -->
+  <p n="AlarmService" h="c" m="a=alarm" t="a:AlarmService">
+   <p n="alarmDbConfig" h="13f" t="a:FileAlarmDbConfig">
+   </p>
+   <p n="defaultAlarmClass" h="d" t="a:AlarmClass">
+   </p>
+   <p n="escalationTimeTrigger" h="e" m="c=control" t="c:TimeTrigger">
+    <p n="triggerMode" t="c:IntervalTriggerMode" v="false;00:00:00.000;23:59:59.999;60000;7f"/>
+    <p n="lastTrigger" t="b:AbsTime" v="2013-07-09T11:56:55.209-04:00"/>
+    <p n="nextTrigger" t="b:AbsTime" v="2013-07-09T11:57:54.188-04:00"/>
+   </p>
+   <a n="escalateAlarms" f="haAL"/>
+  </p>
+  <!-- /Services/HistoryService -->
+  <p n="HistoryService" h="f" m="h=history" t="h:HistoryService">
+   <p n="historyGroupings" h="10" t="h:HistoryGroupings">
+   </p>
+  </p>
+  <!-- /Services/AuditHistory -->
+  <p n="AuditHistory" h="11" t="h:AuditHistoryService">
+   <p n="historyConfig" h="12" t="h:HistoryConfig">
+    <p n="id" t="h:HistoryId" v="/node/AuditHistory"/>
+    <p n="source" t="b:OrdList" v="station:|h:11"/>
+    <p n="timeZone" t="b:TimeZone" v="America/New_York;-18000000;3600000;02:00:00.000,wall,march,8,on or after,sunday,undefined;02:00:00.000,wall,november,1,on or after,sunday,undefined"/>
+    <p n="recordType" t="b:TypeSpec" v="history:AuditRecord"/>
+    <p n="schema" t="h:HistorySchema" v="timestamp,baja:AbsTime;operation,baja:String;target,baja:String;slotName,baja:String;oldValue,baja:String;value,baja:String;userName,baja:String"/>
+   </p>
+  </p>
+  <!-- /Services/LogHistory -->
+  <p n="LogHistory" h="13" t="h:LogHistoryService">
+   <p n="historyConfig" h="14" t="h:HistoryConfig">
+    <p n="id" t="h:HistoryId" v="/node/LogHistory"/>
+    <p n="source" t="b:OrdList" v="station:|h:13"/>
+    <p n="timeZone" t="b:TimeZone" v="America/New_York;-18000000;3600000;02:00:00.000,wall,march,8,on or after,sunday,undefined;02:00:00.000,wall,november,1,on or after,sunday,undefined"/>
+    <p n="recordType" t="b:TypeSpec" v="history:LogRecord"/>
+    <p n="schema" t="h:HistorySchema" v="timestamp,baja:AbsTime;logName,baja:String;severity,baja:Integer;message,baja:String;exception,baja:String"/>
+   </p>
+  </p>
+  <!-- /Services/ProgramService -->
+  <p n="ProgramService" h="15" c="2" m="p=program" t="p:ProgramService">
+  </p>
+  <!-- /Services/BackupService -->
+  <p n="BackupService" h="16" m="bk=backup" t="bk:BackupService">
+  </p>
+  <!-- /Services/WebService -->
+  <p n="WebService" h="17" t="w:WebService">
+   <p n="httpPort" h="140" t="b:ServerPort">
+    <p n="publicServerPort" v="80"/>
+   </p>
+   <p n="httpsPort" h="141" t="b:ServerPort">
+    <p n="publicServerPort" v="443"/>
+   </p>
+   <p n="clientEnvironments" h="18" t="w:ClientEnvironments">
+    <p n="envServlet" h="19" t="w:ClientEnvServlet">
+    </p>
+    <!-- /Services/WebService/clientEnvironments/mobile -->
+    <p n="mobile" h="45" t="w:MobileClientEnvironment">
+    </p>
+   </p>
+   <!-- /Services/WebService/JettyWebServer -->
+   <p n="JettyWebServer" h="12a" m="j=jetty" t="j:JettyWebServer">
+   </p>
+  </p>
+  <!-- /Services/BoxService -->
+  <p n="BoxService" h="c8" m="box=box" t="box:BoxService">
+   <p n="enabled" f="h"/>
+   <p n="servlet" h="c9" t="box:BoxServlet">
+   </p>
+   <p n="webSocketAcceptor" h="ca" t="box:BoxWebSocketAcceptor">
+   </p>
+   <p n="foxAcceptor" h="cb" t="box:FoxBoxAcceptor">
+   </p>
+   <p n="sys" h="cc" t="box:SysChannel">
+   </p>
+   <p n="reg" h="cd" t="box:RegistryChannel">
+   </p>
+   <p n="timeZone" h="14f" t="box:TimeZoneChannel">
+   </p>
+   <p n="unit" h="142" t="box:UnitChannel">
+   </p>
+   <p n="history" h="143" t="box:HistoryChannel">
+   </p>
+   <p n="alarm" h="144" t="box:AlarmChannel">
+   </p>
+   <p n="ssession" h="ce" t="box:ServerSessionChannel">
+   </p>
+   <p n="ord" h="cf" t="box:OrdChannel">
+   </p>
+   <p n="transfer" h="14e" t="box:TransferChannel">
+   </p>
+  </p>
+  <!-- /Services/AuthenticationService -->
+  <p n="AuthenticationService" h="2d" t="b:AuthenticationService">
+   <p n="authenticationSchemes" h="133" t="b:AuthenticationSchemeFolder">
+    <!-- /Services/AuthenticationService/authenticationSchemes/DigestScheme -->
+    <p n="DigestScheme" h="134" t="b:DigestAuthenticationScheme">
+     <p n="globalPasswordConfiguration" h="145" t="b:GlobalPasswordConfiguration">
+      <p n="passwordStrength" t="b:PasswordStrength">
+       <p n="minimumLength" v="8"/>
+       <p n="minimumLowerCase" v="0"/>
+       <p n="minimumUpperCase" v="0"/>
+       <p n="minimumDigits" v="0"/>
+      </p>
+     </p>
+    </p>
+    <!-- /Services/AuthenticationService/authenticationSchemes/LegacyDigestScheme -->
+    <p n="LegacyDigestScheme" h="135" t="b:LegacyDigestAuthenticationScheme">
+     <p n="globalPasswordConfiguration" h="146" t="b:GlobalPasswordConfiguration">
+     </p>
+    </p>
+   </p>
+  </p>
+  <!-- /Services/FoxService -->
+  <p n="FoxService" h="148" m="f=fox" t="f:FoxService">
+   <p n="foxPort" h="149" t="b:ServerPort">
+    <p n="publicServerPort" v="1911"/>
+   </p>
+   <p n="foxsPort" h="14a" t="b:ServerPort">
+    <p n="publicServerPort" v="4911"/>
+   </p>
+   <p n="serverConnections" h="14b" t="f:ServerConnections">
+   </p>
+  </p>
+  <!-- /Services/RoleService -->
+  <p n="RoleService" h="14c" t="b:RoleService">
+   <p n="admin" h="14d" t="b:AdminRole">
+   </p>
+  </p>
+ </p>
+ <!-- /Drivers -->
+ <p n="Drivers" h="1a" m="d=driver" t="d:DriverContainer">
+  <!-- /Drivers/NiagaraNetwork -->
+  <p n="NiagaraNetwork" h="1b" m="nd=niagaraDriver" t="nd:NiagaraNetwork">
+   <p n="health" t="d:PingHealth">
+    <p n="lastOkTime" t="b:AbsTime" v="2013-07-09T11:55:00.000-04:00"/>
+   </p>
+   <p n="alarmSourceInfo" h="1c" t="a:AlarmSourceInfo">
+    <p n="toOffnormalText" t="b:Format" v="%lexicon(driver:pingFail)%"/>
+    <p n="toNormalText" t="b:Format" v="%lexicon(driver:pingSuccess)%"/>
+   </p>
+   <p n="monitor" h="1d" t="d:PingMonitor">
+   </p>
+   <p n="localStation" h="131" t="nd:LocalSysDefStation">
+    <p n="persistTask" h="132" t="nd:PersistTask">
+    </p>
+   </p>
+   <p n="sysDefProvider" h="20" t="nd:BogProvider">
+   </p>
+   <p n="tuningPolicies" h="23" t="nd:NiagaraTuningPolicyMap">
+    <p n="defaultPolicy" h="24" t="nd:NiagaraTuningPolicy">
+    </p>
+   </p>
+   <p n="historyPolicies" h="25" t="d:HistoryNetworkExt">
+    <p n="onDemandPollScheduler" h="26" t="d:HistoryPollScheduler">
+    </p>
+    <p n="defaultRule" h="27" t="d:ConfigRule">
+     <p n="capacity" t="h:Capacity" v="0:0"/>
+     <p n="fullPolicy" t="h:FullPolicy" v="roll"/>
+    </p>
+   </p>
+   <p n="workers" h="28" t="nd:CyclicThreadPoolWorker">
+    <p n="maxThreads" v="max"/>
+   </p>
+   <p n="virtualPolicies" h="29" t="nd:NiagaraVirtualNetworkExt">
+    <p n="cachePolicy" h="2a" m="nv=niagaraVirtual" t="nv:NiagaraVirtualCachePolicy">
+     <p n="cache" h="2b" t="nv:DefaultNiagaraVirtualCache">
+     </p>
+    </p>
+   </p>
+  </p>
+ </p>
+ <!-- /Apps -->
+ <p n="Apps" h="2c" m="app=app" t="app:AppContainer">
+ </p>
+</p>
+</bajaObjectGraph>

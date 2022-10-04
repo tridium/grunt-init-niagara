@@ -111,7 +111,7 @@ Question.questions = {
   'form factor': new Question('form factor', { mini: 'agent', max: 'agent' }),
   'agent': new Question('agent', { 'baja:Component': 'class name', '': 'skeleton' }),
   'class name': new Question('class name', { 'com.testmodule.BTestWidget': 'skeleton' }),
-  'skeleton': new Question('skeleton', { y: 'less', n: hasJsx ? 'jsx' : 'less' }),
+  'skeleton': new Question('skeleton', { y: hasJsx ? 'jsx' : 'less', n: hasJsx ? 'jsx' : 'less' }),
   'jsx': new Question('jsx', { y: 'less', n: 'less' }),
   'less': new Question('less', { y: 'version', n: 'version' }),
   'version': new Question('version', { '0.1.0': 'project homepage' }),

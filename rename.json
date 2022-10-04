@@ -3,9 +3,11 @@
   "name-ux/Gruntfile.js": "{%= name %}-ux/Gruntfile.js",
   "name-ux/module-include.xml": "{%= name %}-ux/module-include.xml",
   "name-ux/name-ux.gradle": "{%= name %}-ux/{%= gradleFile %}",
+  "name-ux/name-ux.gradle.kts": "{%= name %}-ux/{%= gradleFile %}",
   "name-ux/README.md": "{%= name %}-ux/README.md",
-  "name-ux/src/com/authorname/name/ClassName.java": "{%= name %}-ux/src/{%= fullClassName.replace(/\\./g, '/') %}.java",
-  "name-ux/src/com/authorname/name/ModuleJsBuild.java": "{%= name %}-ux/src/{%= package.replace(/\\./g, '/') %}/B{%= jsBuildName %}.java",
+  "name-ux/src/com/authorname/name/ux/ClassName.java": "{%= name %}-ux/src/{%= fullClassName.replace(/\\./g, '/') %}.java",
+  "name-ux/src/com/authorname/name/ux/ModuleJsBuild.java": "{%= name %}-ux/src/{%= package.replace(/\\./g, '/') %}/B{%= jsBuildName %}.java",
+  "name-ux/src/com/authorname/name/ux/ModuleCssResource.java": "{%= name %}-ux/src/{%= package.replace(/\\./g, '/') %}/B{%= cssResourceName %}.java",
   "name-ux/src/rc/name.css": "{%= name %}-ux/src/rc/{%= name %}.css",
   "name-ux/src/rc/name.less": "{%= name %}-ux/src/rc/{%= name %}.less",
   "name-ux/src/rc/name.js": "{%= name %}-ux/src/rc/{%= name %}.js",
@@ -22,6 +24,7 @@
   "name-ux/srcTest/rc/spec/nameSpec.js": "{%= name %}-ux/srcTest/rc/spec/{%= name %}Spec.js",
   "name-ux/srcTest/rc/spec/widgetNameSpec.js": "{%= name %}-ux/srcTest/rc/spec/{%= widgetName %}Spec.js",
   "name-ux/srcTest/rc/stations/nameUnitTest/config.bog": "{%= name %}-ux/srcTest/rc/stations/{%= name %}UnitTest/config.bog",
+  "name-ux/srcTest/rc/stations/nameUnitTest/file.xml": "{%= name %}-ux/srcTest/rc/stations/{%= name %}UnitTest/file.xml",
   "name-ux/tutorials/example.json": "{%= name %}-ux/tutorials/example.json",
   "name-ux/tutorials/example.md": "{%= name %}-ux/tutorials/example.md"
 }

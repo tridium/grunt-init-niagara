@@ -78,7 +78,7 @@ function doGruntInit(cwd, choices, cb) {
  */
 function doGradlewBuild(moduleName, cb) {
   var cwd = niagara_dev_home,
-      buildCmd = ':' + moduleName + '-ux:build';
+      buildCmd = ':' + moduleName + '-ux:moduleTestJar';
   // disable daemon, since we're wiping out the directory in between
   exec('gradlew', [ buildCmd, '-a', '--no-daemon', '--rerun-tasks' ], cwd, cb);
 }

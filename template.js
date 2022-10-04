@@ -6,6 +6,7 @@
 
 const path = require('path');
 const parseVersion = require('./parseVersion');
+const { existsSync, readFileSync, writeFileSync } = require('fs');
 
 var superlatives = [
   'whimsical',
@@ -75,13 +76,56 @@ function superlative() {
   return superlatives.splice(Math.floor(Math.random() * superlatives.length), 1);
 }
 
+// Returns true if niagara-module.xml file exists (4.13+)
+function hasNiagaraModuleFile() {
+  return existsSync('./niagara-module.xml');
+}
+
+function updateNiagaraModuleFile(name, preferredSymbol) {
+  const path = process.cwd() + '/niagara-module.xml';
+
+  if (existsSync(path)) {
+    let content = readFileSync(path, 'utf8');
+    const runtimeProfilesRegex = /runtimeProfiles="([^"]+)"/;
+    const match = content.match(runtimeProfilesRegex);
+    if (!match) {
+      throw new Error('Invalid niagara-module.xml does not contain runtimeProfiles');
+    }
+
+    let runtimeProfiles = match[1];
+    if (runtimeProfiles.match('ux')) {
+      return; //already there
+    }
+
+    content = content.replace(runtimeProfilesRegex, `runtimeProfiles="${ runtimeProfiles },ux"`);
+    writeFileSync(path, content);
+  } else {
+    const content = `<?xml version="1.0" encoding="UTF-8"?>
+<niagara-module moduleName="${ name }" preferredSymbol="${ preferredSymbol }" runtimeProfiles="ux"/>`;
+    writeFileSync(path, content);
+  }
+}
+
 exports.template = function (grunt, init, done) {
-  var niagaraModuleName,
-      allPrompts,
-      currentNiagaraVersion;
+  let niagaraModuleName;
+  let preferredSymbol;
+  let allPrompts;
+  let currentNiagaraVersion;
+
+  const atOrLaterThan = (version) => {
+    if (!currentNiagaraVersion) {
+      throw new Error('cannot call before version prompt');
+    }
+    return currentNiagaraVersion.compareTo(version) >= 0;
+  }
+  const v46OrLater = () => atOrLaterThan('4.6');
+  const v49OrLater = () => atOrLaterThan('4.9');
+  const v410OrLater = () => atOrLaterThan('4.10');
+  const v411OrLater = () => atOrLaterThan('4.11');
+  const v413OrLater = () => atOrLaterThan('4.13');
       
   /**
-   * Insert the given prompts after the the prompt specified by name. They will
+   * Insert the given prompts after the prompt specified by name. They will
    * not be inserted if they already exist.
    *
    * @private
@@ -101,7 +145,7 @@ exports.template = function (grunt, init, done) {
 
     while (prompts.length) {
       promptToInsert = prompts.splice(0, 1)[0]; //get first prompt
-      if (allPrompts.indexOf(promptToInsert) === -1) {
+      if (promptToInsert && allPrompts.indexOf(promptToInsert) === -1) {
         allPrompts.splice(++idx, 0, promptToInsert);
       }
     }
@@ -137,8 +181,7 @@ exports.template = function (grunt, init, done) {
     default: function (value, data, done) {
       var author = data['author_name'].replace(/[^A-Za-z0-9]/g, '')
         .toLowerCase();
-      done(null, 'com.' + author + '.' + niagaraModuleName.toLowerCase() +
-        '.B' + data.widgetName);
+      done(null, `com.${ author }.${ niagaraModuleName.toLowerCase() }.ux.B${ data.widgetName }`);
     },
     validator: function (value, done) {
       done(value.split('.').pop().charAt(0) === 'B');
@@ -207,6 +250,10 @@ exports.template = function (grunt, init, done) {
       var name = data.name;
       done(null, name.replace(/[aeiou]|[^A-Za-z0-9]/g, ''));
     },
+    validator: (value, done) => {
+      preferredSymbol = value;
+      done(!!preferredSymbol);
+    },
     warning: 'Must be unique'
   };
 
@@ -217,13 +264,6 @@ exports.template = function (grunt, init, done) {
     message: 'Only generate skeleton files?',
     name: 'skeleton',
     default: 'y/N',
-    validator: function (value, done) {
-      if (value.toLowerCase() !== 'y' && currentNiagaraVersion &&
-        currentNiagaraVersion.compareTo('4.10') >= 0) {
-        insertPromptsAfter('skeleton', jsxPrompt);
-      }
-      done();
-    },
     warning: 'y: Your widget files will be the bare ' +
       'minimum structure of a bajaux widget. N: Your widget files will contain ' +
       'demo logic to examine and modify. If this is your first time using ' +
@@ -244,7 +284,7 @@ exports.template = function (grunt, init, done) {
       if (value.toLowerCase() === 'y') {
         //we're creating a bajaux widget. prompt for a couple more bajaux things
         insertPromptsAfter('bajaux', widgetNamePrompt, formFactorPrompt,
-          registerAgentPrompt, skeletonPrompt, lessPrompt);
+          registerAgentPrompt, skeletonPrompt, v410OrLater() && jsxPrompt, lessPrompt);
       }
       done();
     }
@@ -316,6 +356,14 @@ exports.template = function (grunt, init, done) {
       return file.match(props.name + '.css');
     }
 
+    function isCssResourceFile(file) {
+      return file.match('CssResource');
+    }
+
+    function isRunFile(file) {
+      return file.match('.run.js');
+    }
+
     function isNonSkeleton(file) {
       return file.match('.htm') ||
         file.match('.css') ||
@@ -326,12 +374,6 @@ exports.template = function (grunt, init, done) {
     }
 
     if (err) { throw err; }
-
-    const targetVersion = parseVersion(props.targetVersion),
-      v46OrLater = targetVersion.compareTo('4.6') >= 0,
-      v49OrLater = targetVersion.compareTo('4.9') >= 0,
-      v410OrLater = targetVersion.compareTo('4.10') >= 0,
-      v411OrLater = targetVersion.compareTo('4.11') >= 0;
 
     //fix/tweak our properties (to be used by templates)
     props.keywords = [];
@@ -357,8 +399,12 @@ exports.template = function (grunt, init, done) {
 
     props.isFirstParty = props.author_name.toLowerCase() === 'tridium';
     props.isThirdParty = !props.isFirstParty;
-    props.gradleVersion = props.isThirdParty ? '4' : '5';
-    props.gradleFile = props.name + '-ux.gradle';
+    if ((v410OrLater() && props.isFirstParty) || (v413OrLater() && props.isThirdParty)) {
+      props.gradleVersion = '7';
+    } else {
+      props.gradleVersion = '4';
+    }
+    props.gradleFile = props.name + (v413OrLater() ? '-ux.gradle.kts' : '-ux.gradle');
     props.fe = String(props.formFactor).toLowerCase() === 'mini';
     props.widgetClass = props.fe ? 'BaseEditor' : 'Widget';
     props.widgetModule = props.fe ? 'nmodule/webEditors/rc/fe/baja/BaseEditor' : 'bajaux/Widget';
@@ -378,18 +424,23 @@ exports.template = function (grunt, init, done) {
     props.less = String(props.less).toLowerCase() === 'y';
     props.skeleton = !props.bajaux || String(props.skeleton).toLowerCase() === 'y';
     props.moduleName = niagaraModuleName;
+    props.preferredSymbol = preferredSymbol;
     props.jsBuildName = capitalizeFirstLetter(props.moduleName) + 'JsBuild';
+    props.useCssResource = props.less && v413OrLater();
+    props.cssResourceName = capitalizeFirstLetter(props.moduleName) + 'CssResource';
     props.widgetName = props.widgetName === undefined ? 'NotAWidget' : props.widgetName;
 
-    props.jqueryVersion = v411OrLater ? '' : (v49OrLater ? '-3.4.1' : '-3.2.0');
-    props.handlebarsFilename = v49OrLater ? 'handlebars' : 'handlebars-v4.0.6';
-    props.hasLogJs = v46OrLater;
-    props.hasGruntPlugin = v46OrLater;
+    props.jqueryVersion = v411OrLater() ? '' : (v49OrLater() ? '-3.4.1' : '-3.2.0');
+    props.handlebarsFilename = v49OrLater() ? 'handlebars' : 'handlebars-v4.0.6';
+    props.hasLogJs = v46OrLater();
+    props.hasGruntPlugin = v46OrLater();
     props.supportsPluginsBlock = props.isFirstParty;
-    props.supportsVendor = v46OrLater;
-    props.newWidgetConstructor = v410OrLater;
-    props.coreModulePlugin = props.isFirstParty && v49OrLater ? 'com.tridium.convention.core-module' : 'com.tridium.niagara-module';
-    props.addJqueryShim = v411OrLater;
+    props.supportsVendor = v46OrLater();
+    props.newWidgetConstructor = v410OrLater();
+    props.coreModulePlugin = props.isFirstParty && v49OrLater() ? 'com.tridium.convention.core-module' : 'com.tridium.niagara-module';
+    props.addJqueryShim = v411OrLater();
+    props.hasNiagaraModule = v413OrLater() && hasNiagaraModuleFile();
+    props.addMoment = v410OrLater();
 
     var files = init.filesToCopy(props);
 
@@ -416,6 +467,14 @@ exports.template = function (grunt, init, done) {
 
     if (props.bajaux && props.skeleton) {
       filterOutProps(files, isNonSkeleton);
+    }
+
+    if (!props.useCssResource) {
+      filterOutProps(files, isCssResourceFile);
+    }
+
+    if (props.isFirstParty) {
+      filterOutProps(files, isRunFile);
     }
 
     init.copyAndProcess(files, props, {
@@ -445,6 +504,15 @@ exports.template = function (grunt, init, done) {
       'for a simple demo:' +
       '\n\n' +
       'http://localhost/module/' + props.name + '/rc/' + props.name + '.htm';
+    }
+
+    if (v413OrLater()) {
+      try {
+        updateNiagaraModuleFile(props.name, props.preferredSymbol);
+      } catch (e) {
+        console.error('Could not update niagara-module.xml! Please verify it manually.');
+        throw e;
+      }
     }
     
     done();
