@@ -404,7 +404,7 @@ exports.template = function (grunt, init, done) {
     } else {
       props.gradleVersion = '4';
     }
-    props.gradleFile = props.name + (v413OrLater() ? '-ux.gradle.kts' : '-ux.gradle');
+    props.gradleFile = props.name + '-ux.gradle';
     props.fe = String(props.formFactor).toLowerCase() === 'mini';
     props.widgetClass = props.fe ? 'BaseEditor' : 'Widget';
     props.widgetModule = props.fe ? 'nmodule/webEditors/rc/fe/baja/BaseEditor' : 'bajaux/Widget';
@@ -445,13 +445,9 @@ exports.template = function (grunt, init, done) {
     var files = init.filesToCopy(props);
 
     if (props.less) {
-      filterOutProps(files, function (file) {
-        return isCssFile(file);
-      });
+      filterOutProps(files, isCssFile);
     } else {
-      filterOutProps(files, function (file) {
-        return isLessFile(file);
-      });
+      filterOutProps(files, isLessFile);
     }
 
     if (!props.bajaux) {
@@ -475,6 +471,13 @@ exports.template = function (grunt, init, done) {
 
     if (props.isFirstParty) {
       filterOutProps(files, isRunFile);
+    }
+
+    // filter out .gradle/.kts file based on gradle version
+    if (props.gradleVersion === '7') {
+      filterOutProps(files, (file) => file.match(/.*-ux\.gradle$/));
+    } else {
+      filterOutProps(files, (file) => file.match(/.*-ux\.gradle\.kts$/));
     }
 
     init.copyAndProcess(files, props, {
