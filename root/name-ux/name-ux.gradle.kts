@@ -60,6 +60,18 @@ dependencies {
     %}
 }
 
+tasks.named<Jar>("jar") {
+  from("src") {
+    include("rc/")
+  }
+}
+
+tasks.named<Jar>("moduleTestJar") {
+  from("srcTest") {
+    include("rc/")
+  }
+}
+
 tasks.named<GruntBuildTask>("gruntBuild") {
   tasks("babel:dist",{% if(less) {%} "less",{%} %} "copy:dist", "requirejs")
 }
