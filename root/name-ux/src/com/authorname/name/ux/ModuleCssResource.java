@@ -9,7 +9,7 @@ import javax.baja.web.js.BCssResource;
 
 @NiagaraType
 @NiagaraSingleton
-public class B{%= cssResourceName %} extends BCssResource
+public final class B{%= cssResourceName %} extends BCssResource
 {
   private B{%= cssResourceName %}()
   {
