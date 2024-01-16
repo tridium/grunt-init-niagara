@@ -345,7 +345,7 @@ exports.template = function (grunt, init, done) {
 
     //is the file used for agent registration of a bajaux widget?
     function isAgentFile(file) {
-      return file.match('.java') || file.match('module-include.xml');
+      return file.match(/\.java$/) || file.match(/module-include.xml$/);
     }
 
     function isLessFile(file) {
