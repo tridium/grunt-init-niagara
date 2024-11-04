@@ -118,11 +118,12 @@ exports.template = function (grunt, init, done) {
     }
     return currentNiagaraVersion.compareTo(version) >= 0;
   }
-  const v46OrLater = () => atOrLaterThan('4.6');
-  const v49OrLater = () => atOrLaterThan('4.9');
-  const v410OrLater = () => atOrLaterThan('4.10');
-  const v411OrLater = () => atOrLaterThan('4.11');
-  const v413OrLater = () => atOrLaterThan('4.13');
+  const v46OrLater = () => atOrLaterThan('4.6.0');
+  const v49OrLater = () => atOrLaterThan('4.9.0');
+  const v410OrLater = () => atOrLaterThan('4.10.0');
+  const v410u10OrLater = () => atOrLaterThan('4.10.10');
+  const v411OrLater = () => atOrLaterThan('4.11.0');
+  const v413OrLater = () => atOrLaterThan('4.13.0');
       
   /**
    * Insert the given prompts after the prompt specified by name. They will
@@ -235,12 +236,12 @@ exports.template = function (grunt, init, done) {
   const targetNiagaraVersionPrompt = {
     message: 'What Niagara version will you build your module against?',
     name: 'targetVersion',
-    default: '4.10',
+    default: '4.10.10',
     validator: (value, done) => {
       currentNiagaraVersion = parseVersion(value);
       done(!!currentNiagaraVersion);
     },
-    warning: 'Must be in major.minor format, e.g. "4.4".'
+    warning: 'Must be in major.minor.update format, e.g. "4.10.10" or "4.14.0".'
   };
 
   const preferredSymbolPrompt = {
@@ -430,7 +431,7 @@ exports.template = function (grunt, init, done) {
     props.cssResourceName = capitalizeFirstLetter(props.moduleName) + 'CssResource';
     props.widgetName = props.widgetName === undefined ? 'NotAWidget' : props.widgetName;
 
-    props.jqueryVersion = v411OrLater() ? '' : (v49OrLater() ? '-3.4.1' : '-3.2.0');
+    props.jqueryVersion = v411OrLater() ||  v410u10OrLater() ? '' : (v49OrLater() ? '-3.4.1' : '-3.2.0');
     props.handlebarsFilename = v49OrLater() ? 'handlebars' : 'handlebars-v4.0.6';
     props.hasLogJs = v46OrLater();
     props.hasGruntPlugin = v46OrLater();
@@ -438,7 +439,7 @@ exports.template = function (grunt, init, done) {
     props.supportsVendor = v46OrLater();
     props.newWidgetConstructor = v410OrLater();
     props.coreModulePlugin = props.isFirstParty && v49OrLater() ? 'com.tridium.convention.core-module' : 'com.tridium.niagara-module';
-    props.addJqueryShim = v411OrLater();
+    props.addJqueryShim = v411OrLater() || v410u10OrLater();
     props.hasNiagaraModule = v413OrLater() && hasNiagaraModuleFile();
     props.addMoment = v410OrLater();
 
