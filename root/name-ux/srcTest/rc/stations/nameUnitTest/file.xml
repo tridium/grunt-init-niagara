@@ -288,8 +288,5 @@
    </p>
   </p>
  </p>
- <!-- /Apps -->
- <p n="Apps" h="2c" m="app=app" t="app:AppContainer">
- </p>
 </p>
 </bajaObjectGraph>
