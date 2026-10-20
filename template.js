@@ -1,14 +1,16 @@
 /* eslint-env node */
+/* global process */
 
 'use strict';
-
-/* eslint-env node */
 
 const path = require('path');
 const parseVersion = require('./parseVersion');
 const { existsSync, readFileSync, writeFileSync } = require('fs');
 
-var superlatives = [
+// workaround for outdated "winston" console output module used by grunt-init
+require('util').error = (...args) => console.log(...args);
+
+const superlatives = [
   'whimsical',
   'distinguished',
   'meritorious',
@@ -42,7 +44,7 @@ exports.warnOn = [
 
 //find the index of the prompt using the property name it provides
 function findPromptIndexByName(arr, name) {
-  for (var i = 0; i < arr.length; i++) {
+  for (let i = 0; i < arr.length; i++) {
     if (arr[i].name === name) {
       return i;
     }
@@ -64,7 +66,7 @@ function isValidTypeSpec(name) {
 
 //remove properties from an object where the property name satisfies the filter
 function filterOutProps(obj, filter) {
-  for (var i in obj) {
+  for (let i in obj) {
     if (obj.hasOwnProperty(i) && filter(i)) {
       delete obj[i];
     }
@@ -124,6 +126,7 @@ exports.template = function (grunt, init, done) {
   const v410u10OrLater = () => atOrLaterThan('4.10.10');
   const v411OrLater = () => atOrLaterThan('4.11.0');
   const v413OrLater = () => atOrLaterThan('4.13.0');
+  const v50OrLater = () => atOrLaterThan('5.0.0');
       
   /**
    * Insert the given prompts after the prompt specified by name. They will
@@ -136,7 +139,7 @@ exports.template = function (grunt, init, done) {
    * insertPromptAfter('prompt1', prompt2, prompt3, prompt4);
    */
   function insertPromptsAfter(name) {
-    var prompts = Array.prototype.slice.call(arguments, 1),
+    let prompts = Array.prototype.slice.call(arguments, 1),
         promptToInsert,
         idx = findPromptIndexByName(allPrompts, name);
 
@@ -180,7 +183,7 @@ exports.template = function (grunt, init, done) {
     message: 'Fully qualified class name for your Widget',
     name: 'fullClassName',
     default: function (value, data, done) {
-      var author = data['author_name'].replace(/[^A-Za-z0-9]/g, '')
+      const author = data['author_name'].replace(/[^A-Za-z0-9]/g, '')
         .toLowerCase();
       done(null, `com.${ author }.${ niagaraModuleName.toLowerCase() }.ux.B${ data.widgetName }`);
     },
@@ -218,13 +221,13 @@ exports.template = function (grunt, init, done) {
     message: 'Niagara module name',
     name: 'name',
     default: function (value, data, done) {
-      var name = path.basename(process.cwd())
+      const name = path.basename(process.cwd())
         .replace(/-/g, '_')
         .replace(/[^A-Za-z0-9_]/g, '');
       done(null, name);
     },
     validator: function (value, done) {
-      var valid = isValidNiagaraModuleName(value);
+      const valid = isValidNiagaraModuleName(value);
       if (valid) {
         niagaraModuleName = value;
       }
@@ -248,7 +251,7 @@ exports.template = function (grunt, init, done) {
     message: 'Shortened preferred symbol for your Niagara module',
     name: 'preferredSymbol',
     default: function (value, data, done) {
-      var name = data.name;
+      const name = data.name;
       done(null, name.replace(/[aeiou]|[^A-Za-z0-9]/g, ''));
     },
     validator: (value, done) => {
@@ -417,7 +420,7 @@ exports.template = function (grunt, init, done) {
 
     props.fullClassName = props.fullClassName || '';
 
-    var split = props.fullClassName.split('.');
+    const split = props.fullClassName.split('.');
     props.className = split.pop();
     props.package = split.join('.');
     props.superlative = superlative;
@@ -442,8 +445,31 @@ exports.template = function (grunt, init, done) {
     props.addJqueryShim = v411OrLater() || v410u10OrLater();
     props.hasNiagaraModule = v413OrLater() && hasNiagaraModuleFile();
     props.addMoment = v410OrLater();
+    props.gruntPluginId = v50OrLater() ? 'com.tridium.grunt' : 'com.tridium.niagara-grunt';
+    props.publicApiPackage = v50OrLater() ? 'niagara' : 'javax.baja';
+    const useRuntimeProfiles = props.useRuntimeProfiles = !v50OrLater();
+    const moduleName = props.name;
+    const modulePartName = v50OrLater() ? moduleName : moduleName + '-ux';
+    const destFolder = props.destFolder = v50OrLater() ? '.' : moduleName + '-ux';
+    props.toProjectName = (moduleName, runtimeProfile) => (runtimeProfile && !v50OrLater()) ? moduleName + '-' + runtimeProfile : moduleName;
 
-    var files = init.filesToCopy(props);
+    if (v50OrLater() && existsSync(path.join(destFolder, moduleName + '.gradle.kts'))) {
+      throw new Error('In version 5.0 and later, grunt-init cannot add files to an existing ' +
+        'Niagara module. Please try again with an empty directory to create a new module.')
+    }
+
+    const files = init.filesToCopy(props);
+
+    if (!useRuntimeProfiles) {
+      Object.keys(files).forEach((src) => {
+        const dest = files[src];
+        delete files[src];
+        src = src
+          .replace(`${moduleName}-ux/`, '')
+          .replace(`-ux.gradle`, '.gradle')
+        files[src] = dest;
+      });
+    }
 
     if (props.less) {
       filterOutProps(files, isCssFile);
@@ -476,9 +502,9 @@ exports.template = function (grunt, init, done) {
 
     // filter out .gradle/.kts file based on gradle version
     if (props.gradleVersion === '7') {
-      filterOutProps(files, (file) => file.match(/.*-ux\.gradle$/));
+      filterOutProps(files, (file) => file.match(/.*\.gradle$/));
     } else {
-      filterOutProps(files, (file) => file.match(/.*-ux\.gradle\.kts$/));
+      filterOutProps(files, (file) => file.match(/.*\.gradle\.kts$/));
     }
 
     init.copyAndProcess(files, props, {
@@ -486,33 +512,30 @@ exports.template = function (grunt, init, done) {
       noProcess: 'name-ux/srcTest/rc/stations/**'
     });
 
-    init.writePackageJSON(props.name + '-ux/package.json', props);
+    init.writePackageJSON(destFolder + '/package.json', props);
 
     // Template-specific notes to be displayed after question prompts.
     exports.after =
-      'You should now cd into your new ' + props.name + '-ux directory and ' +
-      'install project dependencies with _npm install_. ' +
+      'You should now build your module by changing to your Niagara User Home ' +
+      ' and typing: _gradlew :' + modulePartName + ':slot :' + modulePartName + ':build_.' +
+      '\n\n' +
       'After that, you may execute project tasks with _grunt_. ' +
       'For more information about installing and configuring Grunt, please ' +
       'see the Getting Started guide:' +
       '\n\n' +
-      'http://gruntjs.com/getting-started' +
-      '\n\n' +
-      'Build the Niagara module with Gradle by changing to your Niagara User ' +
-      'Home and typing: ' +
-      ('_gradlew :' + props.name + '-ux:build_');
-      
+      'https://gruntjs.com/getting-started';
+
     if (props.bajaux && !props.skeleton) {
       exports.after += '\n\n' +
       'If you like, you can start up a station and visit the following URL ' +
       'for a simple demo:' +
       '\n\n' +
-      'http://localhost/module/' + props.name + '/rc/' + props.name + '.htm';
+      'https://localhost/module/' + moduleName + '/rc/' + moduleName + '.htm';
     }
 
-    if (v413OrLater()) {
+    if (v413OrLater() && !v50OrLater()) {
       try {
-        updateNiagaraModuleFile(props.name, props.preferredSymbol);
+        updateNiagaraModuleFile(moduleName, props.preferredSymbol);
       } catch (e) {
         console.error('Could not update niagara-module.xml! Please verify it manually.');
         throw e;

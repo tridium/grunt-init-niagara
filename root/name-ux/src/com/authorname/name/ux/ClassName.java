@@ -1,17 +1,22 @@
 package {%= package %};
 
-import javax.baja.naming.BOrd;
-import javax.baja.nre.annotations.NiagaraSingleton;
-import javax.baja.nre.annotations.NiagaraType;
-import javax.baja.sys.BSingleton;
-import javax.baja.sys.Context;
-import javax.baja.sys.Sys;
-import javax.baja.sys.Type;
-import javax.baja.web.{%= widgetInterface %};
-import javax.baja.web.js.BIJavaScript;
-import javax.baja.web.js.JsInfo;
+import {%= publicApiPackage %}.naming.BOrd;{% if (agentType) { %}
+import {%= publicApiPackage %}.nre.annotations.AgentOn;
+{% } %}import {%= publicApiPackage %}.nre.annotations.NiagaraSingleton;
+import {%= publicApiPackage %}.nre.annotations.NiagaraType;
+import {%= publicApiPackage %}.sys.BSingleton;
+import {%= publicApiPackage %}.sys.Context;
+import {%= publicApiPackage %}.sys.Sys;
+import {%= publicApiPackage %}.sys.Type;
+import {%= publicApiPackage %}.web.{%= widgetInterface %};
+import {%= publicApiPackage %}.web.js.BIJavaScript;
+import {%= publicApiPackage %}.web.js.JsInfo;
 
-@NiagaraType
+@NiagaraType{% if (agentType) { %}(
+  agent = @AgentOn(
+    types = "{%= agentType %}"
+  )
+){% } %}
 @NiagaraSingleton
 public final class {%= className %}
     extends BSingleton

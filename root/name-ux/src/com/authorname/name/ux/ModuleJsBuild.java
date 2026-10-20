@@ -1,11 +1,11 @@
 package {%= package %};
 
-import javax.baja.naming.BOrd;
-import javax.baja.nre.annotations.NiagaraSingleton;
-import javax.baja.nre.annotations.NiagaraType;
-import javax.baja.sys.Sys;
-import javax.baja.sys.Type;
-import javax.baja.web.js.BJsBuild;
+import {%= publicApiPackage %}.naming.BOrd;
+import {%= publicApiPackage %}.nre.annotations.NiagaraSingleton;
+import {%= publicApiPackage %}.nre.annotations.NiagaraType;
+import {%= publicApiPackage %}.sys.Sys;
+import {%= publicApiPackage %}.sys.Type;
+import {%= publicApiPackage %}.web.js.BJsBuild;
 
 @NiagaraType
 @NiagaraSingleton
